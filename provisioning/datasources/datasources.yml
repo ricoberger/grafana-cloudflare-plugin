@@ -1,0 +1,18 @@
+apiVersion: 1
+
+datasources:
+  - name: Cloudflare
+    type: ricoberger-cloudflare-datasource
+    access: proxy
+    isDefault: false
+    orgId: 1
+    version: 1
+    editable: true
+    jsonData:
+      # Must be "apiToken" or "apiKey"
+      authMethod: apiKey
+      apiEmail: ${CF_API_EMAIL}
+      zones:
+    secureJsonData:
+      apiKey: ${CF_API_KEY}
+      apiToken: ${CF_API_TOKEN}

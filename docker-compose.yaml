@@ -1,0 +1,15 @@
+services:
+  grafana:
+    extends:
+      file: .config/docker-compose-base.yaml
+      service: grafana
+    build:
+      args:
+        grafana_image: ${GRAFANA_IMAGE:-grafana}
+        grafana_version: ${GRAFANA_VERSION:-12.3.0}
+    environment:
+      GF_LOG_FILTERS: plugin.ricoberger-cloudflare-datasource:debug
+      GF_LOG_LEVEL: error
+      CF_API_EMAIL: ${CF_API_EMAIL}
+      CF_API_KEY: ${CF_API_KEY}
+      CF_API_TOKEN: ${CF_API_TOKEN}
