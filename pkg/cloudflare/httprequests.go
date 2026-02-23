@@ -172,15 +172,28 @@ type HttpRequestsAggregateResponse struct {
 				Dimensions map[string]any     `json:"dimensions"`
 				Sum        map[string]float64 `json:"sum"`
 			} `json:"httpRequestsAdaptiveGroups"`
+			HttpRequestsOverviewAdaptiveGroups []struct {
+				Dimensions map[string]any     `json:"dimensions"`
+				Sum        map[string]float64 `json:"sum"`
+			} `json:"httpRequestsOverviewAdaptiveGroups"`
 		} `json:"zones"`
 	} `json:"viewer"`
 }
 
 func (c *client) GetHTTPRequestsAggregate(ctx context.Context, zoneId, metricName, filters, dimensions, legend string, limit int64, timeTo time.Time) backend.DataResponse {
+	var group string
+	if strings.HasPrefix(metricName, "httpRequests_overview_") {
+		group = "httpRequestsOverviewAdaptiveGroups"
+		metricName = strings.TrimPrefix(metricName, "httpRequests_overview_")
+	} else {
+		group = "httpRequestsAdaptiveGroups"
+		metricName = strings.TrimPrefix(metricName, "httpRequests_")
+	}
+
 	query := fmt.Sprintf(`{
 		viewer {
 			zones(filter: {zoneTag: "%s"}) {
-				httpRequestsAdaptiveGroups(
+				%s(
 					%s
 					limit: %d
 				) {
@@ -189,7 +202,7 @@ func (c *client) GetHTTPRequestsAggregate(ctx context.Context, zoneId, metricNam
 				}
 			}
 		}
-	}`, zoneId, filters, limit, metricName, dimensions)
+	}`, zoneId, group, filters, limit, metricName, dimensions)
 
 	res, err := graphQLRequest[HttpRequestsAggregateResponse](ctx, c.client, query)
 	if err != nil {
@@ -199,7 +212,12 @@ func (c *client) GetHTTPRequestsAggregate(ctx context.Context, zoneId, metricNam
 	frameData := make(map[string]FrameData)
 
 	for _, z := range res.Viewer.Zones {
-		for _, r := range z.HttpRequestsAdaptiveGroups {
+		groups := z.HttpRequestsAdaptiveGroups
+		if len(groups) == 0 {
+			groups = z.HttpRequestsOverviewAdaptiveGroups
+		}
+
+		for _, r := range groups {
 			var keys []string
 			timestamp := timeTo
 			var labels = make(map[string]string)

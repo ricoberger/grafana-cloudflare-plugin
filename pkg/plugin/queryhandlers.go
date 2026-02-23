@@ -114,7 +114,7 @@ func (d *Datasource) handleMetrics(ctx context.Context, query concurrent.Query) 
 	case qm.Name == "httpRequests":
 		return d.cloudflareClient.GetHTTPRequests(ctx, qm.Zone, filters, qm.Limit)
 	case strings.HasPrefix(qm.Name, "httpRequests_"):
-		return d.cloudflareClient.GetHTTPRequestsAggregate(ctx, qm.Zone, strings.TrimPrefix(qm.Name, "httpRequests_"), filters, dimensions, qm.Legend, qm.Limit, query.DataQuery.TimeRange.To)
+		return d.cloudflareClient.GetHTTPRequestsAggregate(ctx, qm.Zone, qm.Name, filters, dimensions, qm.Legend, qm.Limit, query.DataQuery.TimeRange.To)
 	default:
 		err := fmt.Errorf("unsupported metric name: %s", qm.Name)
 		d.logger.Error("Failed to unmarshal query model", "error", err.Error())
