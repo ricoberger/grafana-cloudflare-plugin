@@ -2,6 +2,7 @@ package cloudflare
 
 import (
 	"context"
+	"sync"
 	"time"
 
 	cloudflare "github.com/cloudflare/cloudflare-go/v6"
@@ -18,8 +19,11 @@ type Client interface {
 }
 
 type client struct {
-	client *cloudflare.Client
-	logger log.Logger
+	client        *cloudflare.Client
+	logger        log.Logger
+	zoneCache     []zones.Zone
+	zoneCacheTime time.Time
+	zoneCacheLock sync.RWMutex
 }
 
 func NewClient(logger log.Logger, authMethod, apiToken, apiEmail, apiKey string) (Client, error) {
