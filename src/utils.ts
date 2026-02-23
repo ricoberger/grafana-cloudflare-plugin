@@ -1,5 +1,11 @@
 export const nameOptions: string[] = [
   'httpRequests',
+  'httpRequests_overview_bytes',
+  'httpRequests_overview_cachedBytes',
+  'httpRequests_overview_cachedRequests',
+  'httpRequests_overview_pageViews',
+  'httpRequests_overview_requests',
+  'httpRequests_overview_visits',
   'httpRequests_edgeDnsResponseTimeMs',
   'httpRequests_edgeRequestBytes',
   'httpRequests_edgeResponseBytes',
@@ -51,7 +57,35 @@ export const filtersOptions: Record<string, string[]> = {
   ],
 };
 
-export const dimensionsOptions: Record<string, string[]> = {
+export const getDimensionsOptions = (name: string): string[] => {
+  if (name.startsWith('httpRequests_overview_')) {
+    return dimensionsOptions['httpRequestsOverview'];
+  }
+
+  if (name.startsWith('httpRequests_')) {
+    return dimensionsOptions['httpRequests'];
+  }
+
+  return [];
+};
+
+const dimensionsOptions: Record<string, string[]> = {
+  httpRequestsOverview: [
+    'clientCountryName',
+    'clientRequestHTTPProtocol',
+    'clientSSLProtocol',
+    'date',
+    'datetime',
+    'datetimeFifteenMinutes',
+    'datetimeFiveMinutes',
+    'datetimeHour',
+    'datetimeMinute',
+    'edgeResponseContentTypeName',
+    'edgeResponseStatus',
+    'httpApplicationVersion',
+    'userAgentBrowser',
+    'zoneVersion',
+  ],
   httpRequests: [
     'cacheStatus',
     'clientASNDescription',
