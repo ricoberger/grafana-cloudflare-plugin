@@ -89,7 +89,7 @@ func (d *Datasource) handleMetrics(ctx context.Context, query concurrent.Query) 
 		return backend.ErrorResponseWithErrorSource(err)
 	}
 
-	filters := cloudflare.FiltersToGraphQL(query.DataQuery.TimeRange.From.Format(time.RFC3339), query.DataQuery.TimeRange.To.Format(time.RFC3339), qm.Filter, qm.Filters)
+	filters := cloudflare.FiltersToGraphQL(query.DataQuery.TimeRange.From.Format(time.RFC3339), query.DataQuery.TimeRange.To.Format(time.RFC3339), qm.Filter, qm.Filters, "")
 	dimensions := cloudflare.DimensionsToGraphQL(qm.Dimensions)
 	orderBy := cloudflare.OrderByToGraphQL(qm.OrderBy)
 	if qm.Limit == 0 {
@@ -109,6 +109,51 @@ func (d *Datasource) handleMetrics(ctx context.Context, query concurrent.Query) 
 		return d.cloudflareClient.GetHTTPRequests(ctx, qm.Zone, filters, qm.Limit)
 	case strings.HasPrefix(qm.Name, "httpRequests_"):
 		return d.cloudflareClient.GetHTTPRequestsAggregate(ctx, qm.Zone, qm.Name, qm.Aggregation, filters, dimensions, orderBy, qm.Legend, qm.Limit, query.DataQuery.TimeRange.To)
+	default:
+		err := fmt.Errorf("unsupported metric name: %s", qm.Name)
+		d.logger.Error("Failed to unmarshal query model", "error", err.Error())
+		span.RecordError(err)
+		span.SetStatus(codes.Error, err.Error())
+		return backend.ErrorResponseWithErrorSource(err)
+	}
+}
+
+func (d *Datasource) handleLogsvolumeQueries(ctx context.Context, req *backend.QueryDataRequest) (*backend.QueryDataResponse, error) {
+	ctx, span := tracing.DefaultTracer().Start(ctx, "handleLogsvolumeQueries")
+	defer span.End()
+
+	return concurrent.QueryData(ctx, req, d.handleLogsvolume, 10)
+}
+
+func (d *Datasource) handleLogsvolume(ctx context.Context, query concurrent.Query) backend.DataResponse {
+	ctx, span := tracing.DefaultTracer().Start(ctx, "handleLogsvolume")
+	defer span.End()
+
+	var qm models.QueryModelMetrics
+	err := json.Unmarshal(query.DataQuery.JSON, &qm)
+	if err != nil {
+		d.logger.Error("Failed to unmarshal query model", "error", err.Error())
+		span.RecordError(err)
+		span.SetStatus(codes.Error, err.Error())
+		return backend.ErrorResponseWithErrorSource(err)
+	}
+
+	filtersInfo := cloudflare.FiltersToGraphQL(query.DataQuery.TimeRange.From.Format(time.RFC3339), query.DataQuery.TimeRange.To.Format(time.RFC3339), qm.Filter, qm.Filters, "edgeResponseStatus_lt: 300")
+	filtersWarning := cloudflare.FiltersToGraphQL(query.DataQuery.TimeRange.From.Format(time.RFC3339), query.DataQuery.TimeRange.To.Format(time.RFC3339), qm.Filter, qm.Filters, "edgeResponseStatus_geq: 300, edgeResponseStatus_lt: 400")
+	filtersError := cloudflare.FiltersToGraphQL(query.DataQuery.TimeRange.From.Format(time.RFC3339), query.DataQuery.TimeRange.To.Format(time.RFC3339), qm.Filter, qm.Filters, "edgeResponseStatus_geq: 400, edgeResponseStatus_lt: 500")
+	filtersCritical := cloudflare.FiltersToGraphQL(query.DataQuery.TimeRange.From.Format(time.RFC3339), query.DataQuery.TimeRange.To.Format(time.RFC3339), qm.Filter, qm.Filters, "edgeResponseStatus_geq: 500")
+
+	d.logger.Info("handleLogsvolume query", "name", qm.Name, "zone", qm.Zone, "filtersInfo", filtersInfo, "filtersWarning", filtersWarning, "filtersError", filtersError, "filtersCritical", filtersCritical)
+	span.SetAttributes(attribute.Key("name").String(qm.Name))
+	span.SetAttributes(attribute.Key("zone").String(qm.Zone))
+	span.SetAttributes(attribute.Key("filtersInfo").String(filtersInfo))
+	span.SetAttributes(attribute.Key("filtersWarning").String(filtersWarning))
+	span.SetAttributes(attribute.Key("filtersError").String(filtersError))
+	span.SetAttributes(attribute.Key("filtersCritical").String(filtersCritical))
+
+	switch {
+	case qm.Name == "httpRequests":
+		return d.cloudflareClient.GetHTTPRequestsVolumes(ctx, qm.Zone, filtersInfo, filtersWarning, filtersError, filtersCritical)
 	default:
 		err := fmt.Errorf("unsupported metric name: %s", qm.Name)
 		d.logger.Error("Failed to unmarshal query model", "error", err.Error())

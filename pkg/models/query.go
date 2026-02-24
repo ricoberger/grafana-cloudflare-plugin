@@ -3,8 +3,9 @@ package models
 type QueryType string
 
 const (
-	QueryTypeZones   = "zones"
-	QueryTypeMetrics = "metrics"
+	QueryTypeZones      = "zones"
+	QueryTypeMetrics    = "metrics"
+	QueryTypeLogsvolume = "logsvolume"
 )
 
 type QueryModelMetrics struct {

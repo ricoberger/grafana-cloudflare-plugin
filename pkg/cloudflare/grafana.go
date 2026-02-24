@@ -8,6 +8,12 @@ import (
 
 var legendReplacer = regexp.MustCompile(`\{\{\s*(.+?)\s*\}\}`)
 
+type Volume struct {
+	Name      string
+	Filter    string
+	Dimension string
+}
+
 type FrameData struct {
 	Index      int
 	Name       string

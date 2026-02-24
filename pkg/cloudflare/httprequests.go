@@ -7,6 +7,7 @@ import (
 	"slices"
 	"sort"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
@@ -163,6 +164,86 @@ func (c *client) GetHTTPRequests(ctx context.Context, zoneId, filters string, li
 	var response backend.DataResponse
 	response.Frames = append(response.Frames, frame)
 
+	return response
+}
+
+func (c *client) GetHTTPRequestsVolumes(ctx context.Context, zoneId, filtersInfo, filtersWarning, filtersError, filtersCritical string) backend.DataResponse {
+	volumes := []Volume{{
+		Name:      "info",
+		Filter:    filtersInfo,
+		Dimension: "datetime",
+	}, {
+		Name:      "warning",
+		Filter:    filtersWarning,
+		Dimension: "datetime",
+	}, {
+		Name:      "error",
+		Filter:    filtersError,
+		Dimension: "datetime",
+	}, {
+		Name:      "critical",
+		Filter:    filtersCritical,
+		Dimension: "datetime",
+	}}
+
+	var response backend.DataResponse
+	var mu sync.Mutex
+	var wg sync.WaitGroup
+	wg.Add(len(volumes))
+
+	for _, volume := range volumes {
+		go func(volume Volume) {
+			defer wg.Done()
+
+			query := fmt.Sprintf(`{
+				viewer {
+					zones(filter: {zoneTag: "%s"}) {
+						httpRequestsAdaptiveGroups(
+							%s
+							limit: 100
+						) {
+							count
+							sum { visits }
+							dimensions { %s }
+						}
+					}
+				}
+			}`, zoneId, volume.Filter, volume.Dimension)
+
+			res, err := graphQLRequest[HttpRequestsAggregateResponse](ctx, c.client, query)
+			if err != nil {
+				c.logger.Error("Request failed", "error", err)
+				return
+			}
+
+			var timestamps []time.Time
+			var values []float64
+
+			for _, z := range res.Viewer.Zones {
+				for _, r := range z.HttpRequestsAdaptiveGroups {
+					t, err := time.Parse(time.RFC3339, r.Dimensions[volume.Dimension].(string))
+					if err != nil {
+						c.logger.Error("Failed to parse timestamp", "error", err)
+						continue
+					}
+					timestamps = append(timestamps, t)
+					values = append(values, r.Count)
+				}
+			}
+
+			frame := data.NewFrame(
+				volume.Name,
+				data.NewField("Time", nil, timestamps),
+				data.NewField(volume.Name, map[string]string{"level": volume.Name}, values),
+			)
+
+			mu.Lock()
+			response.Frames = append(response.Frames, frame)
+			mu.Unlock()
+		}(volume)
+	}
+
+	wg.Wait()
 	return response
 }
 
