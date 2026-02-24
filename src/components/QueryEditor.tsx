@@ -15,7 +15,12 @@ import { css } from '@emotion/css';
 
 import { DataSource } from '../datasource';
 import { DEFAULT_QUERIES, Options, Query } from '../types';
-import { filtersOptions, getDimensionsOptions, nameOptions } from '../utils';
+import {
+  filtersOptions,
+  getDimensionsOptions,
+  getOrderByOptions,
+  nameOptions,
+} from '../utils';
 import { ZoneField } from './ZoneField';
 
 type Props = QueryEditorProps<DataSource, Query, Options>;
@@ -160,6 +165,30 @@ export function QueryEditor({
                 onChange({
                   ...query,
                   dimensions: Array.from(option.values()).map(
+                    (value) => value.value,
+                  ),
+                });
+              }}
+            />
+          </Field>
+        )}
+
+        {query.name && query.name.startsWith('httpRequests_') && (
+          <Field label="Order by">
+            <MultiCombobox<string>
+              width={25}
+              value={query.orderBy}
+              options={getOrderByOptions(
+                query.name,
+                query.dimensions || [],
+              ).map((orderBy) => ({
+                value: orderBy,
+              }))}
+              // eslint-disable-next-line @typescript-eslint/array-type
+              onChange={(option: ComboboxOption<string>[]) => {
+                onChange({
+                  ...query,
+                  orderBy: Array.from(option.values()).map(
                     (value) => value.value,
                   ),
                 });

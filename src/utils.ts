@@ -131,3 +131,21 @@ const dimensionsOptions: Record<string, string[]> = {
     'wafXssAttackScore',
   ],
 };
+
+export const getOrderByOptions = (
+  name: string,
+  dimensions: string[],
+): string[] => {
+  const options = [];
+
+  const metricName = name.split('_')[name.split('_').length - 1];
+  options.push(`sum_${metricName}_ASC`);
+  options.push(`sum_${metricName}_DESC`);
+
+  for (const dimension of dimensions) {
+    options.push(`${dimension}_ASC`);
+    options.push(`${dimension}_DESC`);
+  }
+
+  return options;
+};

@@ -180,7 +180,7 @@ type HttpRequestsAggregateResponse struct {
 	} `json:"viewer"`
 }
 
-func (c *client) GetHTTPRequestsAggregate(ctx context.Context, zoneId, metricName, filters, dimensions, legend string, limit int64, timeTo time.Time) backend.DataResponse {
+func (c *client) GetHTTPRequestsAggregate(ctx context.Context, zoneId, metricName, filters, dimensions, orderBy, legend string, limit int64, timeTo time.Time) backend.DataResponse {
 	var group string
 	if strings.HasPrefix(metricName, "httpRequests_overview_") {
 		group = "httpRequestsOverviewAdaptiveGroups"
@@ -196,13 +196,14 @@ func (c *client) GetHTTPRequestsAggregate(ctx context.Context, zoneId, metricNam
 				%s(
 					%s
 					limit: %d
+					orderBy: [%s]
 				) {
 					sum { %s }
 					%s
 				}
 			}
 		}
-	}`, zoneId, group, filters, limit, metricName, dimensions)
+	}`, zoneId, group, filters, limit, orderBy, metricName, dimensions)
 
 	res, err := graphQLRequest[HttpRequestsAggregateResponse](ctx, c.client, query)
 	if err != nil {

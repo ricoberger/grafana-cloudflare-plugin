@@ -12,6 +12,7 @@ type QueryModelMetrics struct {
 	Zone       string                    `json:"zone"`
 	Filters    []QueryModelMetricsFilter `json:"filters"`
 	Dimensions []string                  `json:"dimensions"`
+	OrderBy    []string                  `json:"orderBy"`
 	Legend     string                    `json:"legend"`
 	Limit      int64                     `json:"limit"`
 }
