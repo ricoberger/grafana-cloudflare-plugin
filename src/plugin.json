@@ -6,6 +6,7 @@
   "metrics": true,
   "logs": true,
   "backend": true,
+  "alerting": true,
   "executable": "gpx_cloudflare",
   "info": {
     "keywords": [
