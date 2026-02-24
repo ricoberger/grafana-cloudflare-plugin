@@ -24,9 +24,9 @@ import {
   QueryModelMetricsFilterType,
 } from '../types';
 import {
-  filtersOptions,
   getAggregationOptions,
   getDimensionsOptions,
+  getFiltersOptions,
   getOrderByOptions,
   nameOptions,
 } from '../utils';
@@ -111,7 +111,7 @@ export function QueryEditor({
           />
         )}
 
-        {query.name && query.name.split('_')[0] in filtersOptions && (
+        {query.name && (
           <Field label="Filters">
             <Box display="flex" direction="column" grow={0} gap={1}>
               <Box>
@@ -165,11 +165,9 @@ export function QueryEditor({
                       width={25}
                       placeholder="Field"
                       value={filter.field}
-                      options={filtersOptions[query.name!.split('_')[0]].map(
-                        (field) => ({
-                          value: field,
-                        }),
-                      )}
+                      options={getFiltersOptions(query.name!).map((field) => ({
+                        value: field,
+                      }))}
                       onChange={(option: ComboboxOption<string>) => {
                         const newFilters = [...(query.filters || [])];
                         newFilters[index] = {
@@ -257,6 +255,7 @@ export function QueryEditor({
                     (value) => value.value,
                   ),
                 });
+                onRunQuery();
               }}
             />
           </Field>
@@ -282,6 +281,7 @@ export function QueryEditor({
                     (value) => value.value,
                   ),
                 });
+                onRunQuery();
               }}
             />
           </Field>

@@ -60,7 +60,31 @@ export const getAggregationOptions = (
   return undefined;
 };
 
-export const filtersOptions: Record<string, string[]> = {
+export const getFiltersOptions = (name: string): string[] => {
+  if (name.startsWith('httpRequests_overview_')) {
+    return filtersOptions['httpRequestsOverview'];
+  }
+
+  if (name.startsWith('httpRequests')) {
+    return filtersOptions['httpRequests'];
+  }
+
+  return [];
+};
+
+const filtersOptions: Record<string, string[]> = {
+  httpRequestsOverview: [
+    '-',
+    'clientCountryName',
+    'clientRequestHTTPProtocol',
+    'clientSSLProtocol',
+    'edgeResponseContentTypeName',
+    'edgeResponseStatus',
+    'httpApplicationVersion',
+    'rayName',
+    'userAgentBrowser',
+    'zoneVersion',
+  ],
   httpRequests: [
     '-',
     'cacheStatus',
