@@ -114,23 +114,22 @@ export function QueryEditor({
         {query.name && (
           <Field label="Filters">
             <Box display="flex" direction="column" grow={0} gap={1}>
-              <Box>
-                <RadioButtonGroup<QueryModelMetricsFilterType>
-                  options={[
-                    { label: 'Builder', value: 'builder' },
-                    { label: 'Code', value: 'code' },
-                  ]}
-                  value={query.filterType}
-                  onChange={(value: QueryModelMetricsFilterType) => {
-                    onChange({
-                      ...query,
-                      filterType: value,
-                      filter: '',
-                      filters: [{ field: '-', operator: '=', value: '' }],
-                    });
-                  }}
-                />
-              </Box>
+              <RadioButtonGroup<QueryModelMetricsFilterType>
+                fullWidth={true}
+                options={[
+                  { label: 'Builder', value: 'builder' },
+                  { label: 'Code', value: 'code' },
+                ]}
+                value={query.filterType}
+                onChange={(value: QueryModelMetricsFilterType) => {
+                  onChange({
+                    ...query,
+                    filterType: value,
+                    filter: '',
+                    filters: [{ field: '-', operator: '=', value: '' }],
+                  });
+                }}
+              />
 
               {query.filterType === 'code' && (
                 <div style={{ width: '524px' }}>
