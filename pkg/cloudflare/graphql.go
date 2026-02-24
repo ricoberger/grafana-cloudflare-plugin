@@ -3,6 +3,7 @@ package cloudflare
 import (
 	"context"
 	"fmt"
+	"slices"
 	"strconv"
 	"strings"
 
@@ -54,22 +55,52 @@ var filterOperators = map[string]string{
 	"<=": "_leq",
 }
 
-func FiltersToGraphQL(filters []models.QueryModelMetricsFilter) string {
-	var filterStrings []string
+func FiltersToGraphQL(timeFrom, timeTo, filter string, filters []models.QueryModelMetricsFilter) string {
+	// Filter out all filters where the field value is "-", as this is used to
+	// indicate that the filter should be ignored. This allows us to display a
+	// new empty filter in the UI without it affecting the query.
+	filters = slices.Collect(func(yield func(models.QueryModelMetricsFilter) bool) {
+		for _, f := range filters {
+			if f.Field != "-" {
+				if !yield(f) {
+					return
+				}
+			}
+		}
+	})
 
-	for _, f := range filters {
-		if f.Field != "-" {
+	// If there is no filter and no filters, return a filter with only the time
+	// range.
+	if filter == "" && len(filters) == 0 {
+		return fmt.Sprintf("filter: { datetime_geq: \"%s\", datetime_leq: \"%s\" }", timeFrom, timeTo)
+	}
+
+	if filter != "" {
+		return fmt.Sprintf("filter: { AND: [{ datetime_geq: \"%s\", datetime_leq: \"%s\" },  %s ] }", timeFrom, timeTo, strings.ReplaceAll(strings.ReplaceAll(filter, "\n", ""), "\r", ""))
+	}
+
+	// If there is no filter, but filters we build the GraphQL filter string
+	// based on the filters. We also need to convert the filter operators to the
+	// GraphQL format, which is done using the filterOperators map. We also need
+	// to convert the filter values to the correct format, which is done by
+	// trying to parse the value as a float. If it can be parsed as a float, we
+	// format it as a float. If it cannot be parsed as a float, we format it as
+	// a string.
+	if len(filters) > 0 {
+		var filterStrings []string
+		for _, f := range filters {
 			v, err := strconv.ParseFloat(f.Value, 64)
 			if err == nil {
 				f.Value = fmt.Sprintf("%f", v)
 			} else {
 				f.Value = fmt.Sprintf(`"%s"`, f.Value)
 			}
-
 			filterStrings = append(filterStrings, fmt.Sprintf("%s%s: %s", f.Field, filterOperators[f.Operator], f.Value))
 		}
+		return fmt.Sprintf("filter: { AND: [{ datetime_geq: \"%s\", datetime_leq: \"%s\" }, { %s }] }", timeFrom, timeTo, strings.Join(filterStrings, ", "))
 	}
-	return fmt.Sprintf("filter: { %s }", strings.Join(filterStrings, ", "))
+
+	return ""
 }
 
 func DimensionsToGraphQL(dimensions []string) string {

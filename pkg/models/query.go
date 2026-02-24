@@ -11,6 +11,7 @@ type QueryModelMetrics struct {
 	Name        string                    `json:"name"`
 	Aggregation string                    `json:"aggregation"`
 	Zone        string                    `json:"zone"`
+	Filter      string                    `json:"filter"`
 	Filters     []QueryModelMetricsFilter `json:"filters"`
 	Dimensions  []string                  `json:"dimensions"`
 	OrderBy     []string                  `json:"orderBy"`
