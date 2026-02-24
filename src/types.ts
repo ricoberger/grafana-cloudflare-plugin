@@ -8,6 +8,7 @@ export const DEFAULT_QUERIES: Record<QueryType, Partial<Query>> = {
     zone: '',
     filters: [{ field: '-', operator: '=', value: '' }],
     dimensions: [],
+    orderBy: [],
     legend: '',
     limit: 100,
   },
@@ -32,6 +33,7 @@ interface QueryModelMetrics {
   zone?: string;
   filters?: QueryModelMetricsFilter[];
   dimensions?: string[];
+  orderBy?: string[];
   legend?: string;
   limit?: number;
 }

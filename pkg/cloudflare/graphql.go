@@ -79,3 +79,11 @@ func DimensionsToGraphQL(dimensions []string) string {
 
 	return fmt.Sprintf("dimensions { %s }", strings.Join(dimensions, ", "))
 }
+
+func OrderByToGraphQL(orderBy []string) string {
+	if len(orderBy) == 0 {
+		return ""
+	}
+
+	return strings.Join(orderBy, ", ")
+}

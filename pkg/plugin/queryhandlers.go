@@ -99,22 +99,24 @@ func (d *Datasource) handleMetrics(ctx context.Context, query concurrent.Query) 
 		Value:    query.DataQuery.TimeRange.To.Format(time.RFC3339),
 	}}, qm.Filters...))
 	dimensions := cloudflare.DimensionsToGraphQL(qm.Dimensions)
+	orderBy := cloudflare.OrderByToGraphQL(qm.OrderBy)
 	if qm.Limit == 0 {
 		qm.Limit = 100
 	}
 
-	d.logger.Info("handleMetrics query", "name", qm.Name, "zone", qm.Zone, "filters", filters, "dimensions", dimensions, "limit", qm.Limit)
+	d.logger.Info("handleMetrics query", "name", qm.Name, "zone", qm.Zone, "filters", filters, "dimensions", dimensions, "orderBy", orderBy, "limit", qm.Limit)
 	span.SetAttributes(attribute.Key("name").String(qm.Name))
 	span.SetAttributes(attribute.Key("zone").String(qm.Zone))
 	span.SetAttributes(attribute.Key("filters").String(filters))
 	span.SetAttributes(attribute.Key("dimensions").String(dimensions))
+	span.SetAttributes(attribute.Key("orderBy").String(orderBy))
 	span.SetAttributes(attribute.Key("limit").Int64(qm.Limit))
 
 	switch {
 	case qm.Name == "httpRequests":
 		return d.cloudflareClient.GetHTTPRequests(ctx, qm.Zone, filters, qm.Limit)
 	case strings.HasPrefix(qm.Name, "httpRequests_"):
-		return d.cloudflareClient.GetHTTPRequestsAggregate(ctx, qm.Zone, qm.Name, filters, dimensions, qm.Legend, qm.Limit, query.DataQuery.TimeRange.To)
+		return d.cloudflareClient.GetHTTPRequestsAggregate(ctx, qm.Zone, qm.Name, filters, dimensions, orderBy, qm.Legend, qm.Limit, query.DataQuery.TimeRange.To)
 	default:
 		err := fmt.Errorf("unsupported metric name: %s", qm.Name)
 		d.logger.Error("Failed to unmarshal query model", "error", err.Error())
