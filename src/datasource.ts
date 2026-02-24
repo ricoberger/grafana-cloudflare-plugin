@@ -12,10 +12,12 @@ import { DataSourceWithBackend, getTemplateSrv } from '@grafana/runtime';
 import { lastValueFrom, Observable } from 'rxjs';
 
 import { Query, Options, DEFAULT_QUERY } from './types';
+import { VariableSupport } from './variablesupport';
 
 export class DataSource extends DataSourceWithBackend<Query, Options> {
   constructor(instanceSettings: DataSourceInstanceSettings<Options>) {
     super(instanceSettings);
+    this.variables = new VariableSupport(this);
   }
 
   getDefaultQuery(_: CoreApp): Partial<Query> {
@@ -27,6 +29,7 @@ export class DataSource extends DataSourceWithBackend<Query, Options> {
       ...query,
       queryType: query.queryType || DEFAULT_QUERY.queryType,
       zone: getTemplateSrv().replace(query.zone, scopedVars),
+      filter: getTemplateSrv().replace(query.filter, scopedVars),
     };
   }
 
