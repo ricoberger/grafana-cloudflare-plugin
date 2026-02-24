@@ -1,0 +1,1761 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 1,
+  "links": [],
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 9,
+      "panels": [],
+      "title": "Overview",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "ricoberger-cloudflare-datasource",
+        "uid": "cloudflare"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 0,
+        "y": 1
+      },
+      "id": 1,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "sum"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "aggregation": "count",
+          "datasource": {
+            "type": "ricoberger-cloudflare-datasource",
+            "uid": "cloudflare"
+          },
+          "dimensions": [
+            "datetimeFiveMinutes"
+          ],
+          "filter": "",
+          "filterType": "builder",
+          "filters": [
+            {
+              "field": "requestSource",
+              "operator": "=",
+              "value": "eyeball"
+            }
+          ],
+          "legend": "",
+          "limit": 1000,
+          "name": "httpRequests_visits",
+          "orderBy": [],
+          "refId": "A",
+          "zone": "${zone}"
+        }
+      ],
+      "title": "Requests",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "ricoberger-cloudflare-datasource",
+        "uid": "cloudflare"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 15,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/1\\d{2}/"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "blue",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/2\\d{2}/"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "blue",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/3\\d{2}/"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "blue",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/4\\d{2}/"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/5\\d{2}/"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "0"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 20,
+        "w": 18,
+        "x": 6,
+        "y": 1
+      },
+      "id": 5,
+      "options": {
+        "legend": {
+          "calcs": [
+            "sum"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "sortBy": "Total",
+          "sortDesc": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "aggregation": "count",
+          "dimensions": [
+            "datetimeFiveMinutes",
+            "edgeResponseStatus"
+          ],
+          "filter": "",
+          "filterType": "builder",
+          "filters": [
+            {
+              "field": "requestSource",
+              "operator": "=",
+              "value": "eyeball"
+            }
+          ],
+          "legend": "{{edgeResponseStatus}}",
+          "limit": 10000,
+          "name": "httpRequests_visits",
+          "orderBy": [],
+          "refId": "A",
+          "zone": "${zone}"
+        }
+      ],
+      "title": "Requests per Status",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "ricoberger-cloudflare-datasource",
+        "uid": "cloudflare"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "decbytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 0,
+        "y": 5
+      },
+      "id": 2,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "sum"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "aggregation": "sum",
+          "datasource": {
+            "type": "ricoberger-cloudflare-datasource",
+            "uid": "cloudflare"
+          },
+          "dimensions": [
+            "datetimeFiveMinutes"
+          ],
+          "filter": "",
+          "filterType": "builder",
+          "filters": [
+            {
+              "field": "requestSource",
+              "operator": "=",
+              "value": "eyeball"
+            }
+          ],
+          "legend": "",
+          "limit": 1000,
+          "name": "httpRequests_edgeResponseBytes",
+          "orderBy": [],
+          "refId": "A",
+          "zone": "${zone}"
+        }
+      ],
+      "title": "Data Transfer",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "ricoberger-cloudflare-datasource",
+        "uid": "cloudflare"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 0,
+        "y": 9
+      },
+      "id": 3,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "sum"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "aggregation": "count",
+          "datasource": {
+            "type": "ricoberger-cloudflare-datasource",
+            "uid": "cloudflare"
+          },
+          "dimensions": [
+            "datetimeFiveMinutes"
+          ],
+          "filter": "{\n  requestSource: \"eyeball\"\n},\n{\n  AND: [\n    {\n      edgeResponseStatus: 200,\n      edgeResponseContentTypeName: \"html\"\n    }\n  ]\n}",
+          "filterType": "code",
+          "filters": [
+            {
+              "field": "-",
+              "operator": "=",
+              "value": ""
+            }
+          ],
+          "legend": "",
+          "limit": 1000,
+          "name": "httpRequests_visits",
+          "orderBy": [],
+          "refId": "A",
+          "zone": "${zone}"
+        }
+      ],
+      "title": "Page Views",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "ricoberger-cloudflare-datasource",
+        "uid": "cloudflare"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 0,
+        "y": 13
+      },
+      "id": 4,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "sum"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "aggregation": "sum",
+          "datasource": {
+            "type": "ricoberger-cloudflare-datasource",
+            "uid": "cloudflare"
+          },
+          "dimensions": [
+            "datetimeFiveMinutes"
+          ],
+          "filter": "{\n  requestSource: \"eyeball\"\n},\n{\n  AND: [\n    {\n      edgeResponseStatus: 200,\n      edgeResponseContentTypeName: \"html\"\n    }\n  ]\n}",
+          "filterType": "code",
+          "filters": [
+            {
+              "field": "-",
+              "operator": "=",
+              "value": ""
+            }
+          ],
+          "legend": "",
+          "limit": 1000,
+          "name": "httpRequests_visits",
+          "orderBy": [],
+          "refId": "A",
+          "zone": "${zone}"
+        }
+      ],
+      "title": "Visits",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "ricoberger-cloudflare-datasource",
+        "uid": "cloudflare"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 0,
+        "y": 17
+      },
+      "id": 26,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "sum"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "aggregation": "count",
+          "datasource": {
+            "type": "ricoberger-cloudflare-datasource",
+            "uid": "cloudflare"
+          },
+          "dimensions": [
+            "datetimeFiveMinutes"
+          ],
+          "filter": "{\n  OR: [\n    {\n      edgeResponseContentTypeName: \"json\"\n    },\n    {\n      edgeResponseContentTypeName: \"xml\"\n    },\n    {\n      edgeResponseContentTypeName: \"grpc\"\n    },\n    {\n      edgeResponseContentTypeName: \"grpcweb\"\n    }\n  ]\n},\n{\n  requestSource: \"eyeball\"\n}",
+          "filterType": "code",
+          "filters": [
+            {
+              "field": "-",
+              "operator": "=",
+              "value": ""
+            }
+          ],
+          "legend": "",
+          "limit": 1000,
+          "name": "httpRequests_edgeResponseBytes",
+          "orderBy": [],
+          "refId": "A",
+          "zone": "${zone}"
+        }
+      ],
+      "title": "API Requests",
+      "type": "stat"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 21
+      },
+      "id": 11,
+      "panels": [
+        {
+          "datasource": {
+            "type": "ricoberger-cloudflare-datasource",
+            "uid": "cloudflare"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "fixedColor": "blue",
+                "mode": "fixed"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "blue",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 8,
+            "x": 0,
+            "y": 22
+          },
+          "id": 12,
+          "options": {
+            "displayMode": "basic",
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": false
+            },
+            "maxVizHeight": 300,
+            "minVizHeight": 16,
+            "minVizWidth": 8,
+            "namePlacement": "auto",
+            "orientation": "horizontal",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showUnfilled": true,
+            "sizing": "auto",
+            "valueMode": "color"
+          },
+          "pluginVersion": "12.3.0",
+          "targets": [
+            {
+              "aggregation": "count",
+              "dimensions": [
+                "clientRefererHost"
+              ],
+              "filter": "",
+              "filterType": "builder",
+              "filters": [
+                {
+                  "field": "requestSource",
+                  "operator": "=",
+                  "value": "eyeball"
+                }
+              ],
+              "legend": "{{clientRefererHost}}",
+              "limit": 5,
+              "name": "httpRequests_visits",
+              "orderBy": [
+                "count_DESC"
+              ],
+              "refId": "A",
+              "zone": "${zone}"
+            }
+          ],
+          "title": "Referers",
+          "type": "bargauge"
+        },
+        {
+          "datasource": {
+            "type": "ricoberger-cloudflare-datasource",
+            "uid": "cloudflare"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "fixedColor": "blue",
+                "mode": "fixed"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "blue",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 8,
+            "x": 8,
+            "y": 22
+          },
+          "id": 15,
+          "options": {
+            "displayMode": "basic",
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": false
+            },
+            "maxVizHeight": 300,
+            "minVizHeight": 16,
+            "minVizWidth": 8,
+            "namePlacement": "auto",
+            "orientation": "horizontal",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showUnfilled": true,
+            "sizing": "auto",
+            "valueMode": "color"
+          },
+          "pluginVersion": "12.3.0",
+          "targets": [
+            {
+              "aggregation": "count",
+              "dimensions": [
+                "clientRequestHTTPHost"
+              ],
+              "filter": "",
+              "filterType": "builder",
+              "filters": [
+                {
+                  "field": "requestSource",
+                  "operator": "=",
+                  "value": "eyeball"
+                }
+              ],
+              "legend": "{{clientRequestHTTPHost}}",
+              "limit": 5,
+              "name": "httpRequests_visits",
+              "orderBy": [
+                "count_DESC"
+              ],
+              "refId": "A",
+              "zone": "${zone}"
+            }
+          ],
+          "title": "Hosts",
+          "type": "bargauge"
+        },
+        {
+          "datasource": {
+            "type": "ricoberger-cloudflare-datasource",
+            "uid": "cloudflare"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "fixedColor": "blue",
+                "mode": "fixed"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "blue",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 8,
+            "x": 16,
+            "y": 22
+          },
+          "id": 14,
+          "options": {
+            "displayMode": "basic",
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": false
+            },
+            "maxVizHeight": 300,
+            "minVizHeight": 16,
+            "minVizWidth": 8,
+            "namePlacement": "auto",
+            "orientation": "horizontal",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showUnfilled": true,
+            "sizing": "auto",
+            "valueMode": "color"
+          },
+          "pluginVersion": "12.3.0",
+          "targets": [
+            {
+              "aggregation": "count",
+              "dimensions": [
+                "clientRequestPath"
+              ],
+              "filter": "",
+              "filterType": "builder",
+              "filters": [
+                {
+                  "field": "requestSource",
+                  "operator": "=",
+                  "value": "eyeball"
+                }
+              ],
+              "legend": "{{clientRequestPath}}",
+              "limit": 5,
+              "name": "httpRequests_visits",
+              "orderBy": [
+                "count_DESC"
+              ],
+              "refId": "A",
+              "zone": "${zone}"
+            }
+          ],
+          "title": "Paths",
+          "type": "bargauge"
+        },
+        {
+          "datasource": {
+            "type": "ricoberger-cloudflare-datasource",
+            "uid": "cloudflare"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "fixedColor": "blue",
+                "mode": "fixed"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "blue",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 8,
+            "x": 0,
+            "y": 30
+          },
+          "id": 13,
+          "options": {
+            "displayMode": "basic",
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": false
+            },
+            "maxVizHeight": 300,
+            "minVizHeight": 16,
+            "minVizWidth": 8,
+            "namePlacement": "auto",
+            "orientation": "horizontal",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showUnfilled": true,
+            "sizing": "auto",
+            "valueMode": "color"
+          },
+          "pluginVersion": "12.3.0",
+          "targets": [
+            {
+              "aggregation": "count",
+              "dimensions": [
+                "userAgentBrowser"
+              ],
+              "filter": "",
+              "filterType": "builder",
+              "filters": [
+                {
+                  "field": "requestSource",
+                  "operator": "=",
+                  "value": "eyeball"
+                }
+              ],
+              "legend": "{{userAgentBrowser}}",
+              "limit": 5,
+              "name": "httpRequests_visits",
+              "orderBy": [
+                "count_DESC"
+              ],
+              "refId": "A",
+              "zone": "${zone}"
+            }
+          ],
+          "title": "Source Browsers",
+          "type": "bargauge"
+        },
+        {
+          "datasource": {
+            "type": "ricoberger-cloudflare-datasource",
+            "uid": "cloudflare"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "fixedColor": "blue",
+                "mode": "fixed"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "blue",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 8,
+            "x": 8,
+            "y": 30
+          },
+          "id": 16,
+          "options": {
+            "displayMode": "basic",
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": false
+            },
+            "maxVizHeight": 300,
+            "minVizHeight": 16,
+            "minVizWidth": 8,
+            "namePlacement": "auto",
+            "orientation": "horizontal",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showUnfilled": true,
+            "sizing": "auto",
+            "valueMode": "color"
+          },
+          "pluginVersion": "12.3.0",
+          "targets": [
+            {
+              "aggregation": "count",
+              "dimensions": [
+                "userAgentOS"
+              ],
+              "filter": "",
+              "filterType": "builder",
+              "filters": [
+                {
+                  "field": "requestSource",
+                  "operator": "=",
+                  "value": "eyeball"
+                }
+              ],
+              "legend": "{{userAgentOS}}",
+              "limit": 5,
+              "name": "httpRequests_visits",
+              "orderBy": [
+                "count_DESC"
+              ],
+              "refId": "A",
+              "zone": "${zone}"
+            }
+          ],
+          "title": "Source Operating Systems",
+          "type": "bargauge"
+        },
+        {
+          "datasource": {
+            "type": "ricoberger-cloudflare-datasource",
+            "uid": "cloudflare"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "fixedColor": "blue",
+                "mode": "fixed"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "blue",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 8,
+            "x": 16,
+            "y": 30
+          },
+          "id": 17,
+          "options": {
+            "displayMode": "basic",
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": false
+            },
+            "maxVizHeight": 300,
+            "minVizHeight": 16,
+            "minVizWidth": 8,
+            "namePlacement": "auto",
+            "orientation": "horizontal",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showUnfilled": true,
+            "sizing": "auto",
+            "valueMode": "color"
+          },
+          "pluginVersion": "12.3.0",
+          "targets": [
+            {
+              "aggregation": "count",
+              "dimensions": [
+                "clientDeviceType"
+              ],
+              "filter": "",
+              "filterType": "builder",
+              "filters": [
+                {
+                  "field": "requestSource",
+                  "operator": "=",
+                  "value": "eyeball"
+                }
+              ],
+              "legend": "{{clientDeviceType}}",
+              "limit": 5,
+              "name": "httpRequests_visits",
+              "orderBy": [
+                "count_DESC"
+              ],
+              "refId": "A",
+              "zone": "${zone}"
+            }
+          ],
+          "title": "Source Device Types",
+          "type": "bargauge"
+        },
+        {
+          "datasource": {
+            "type": "ricoberger-cloudflare-datasource",
+            "uid": "cloudflare"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "fixedColor": "blue",
+                "mode": "fixed"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "blue",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 8,
+            "x": 0,
+            "y": 38
+          },
+          "id": 19,
+          "options": {
+            "displayMode": "basic",
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": false
+            },
+            "maxVizHeight": 300,
+            "minVizHeight": 16,
+            "minVizWidth": 8,
+            "namePlacement": "auto",
+            "orientation": "horizontal",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showUnfilled": true,
+            "sizing": "auto",
+            "valueMode": "color"
+          },
+          "pluginVersion": "12.3.0",
+          "targets": [
+            {
+              "aggregation": "count",
+              "dimensions": [
+                "userAgent"
+              ],
+              "filter": "",
+              "filterType": "builder",
+              "filters": [
+                {
+                  "field": "requestSource",
+                  "operator": "=",
+                  "value": "eyeball"
+                }
+              ],
+              "legend": "{{userAgent}}",
+              "limit": 5,
+              "name": "httpRequests_visits",
+              "orderBy": [
+                "count_DESC"
+              ],
+              "refId": "A",
+              "zone": "${zone}"
+            }
+          ],
+          "title": "Source User Agents",
+          "type": "bargauge"
+        },
+        {
+          "datasource": {
+            "type": "ricoberger-cloudflare-datasource",
+            "uid": "cloudflare"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "fixedColor": "blue",
+                "mode": "fixed"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "blue",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 8,
+            "x": 8,
+            "y": 38
+          },
+          "id": 20,
+          "options": {
+            "displayMode": "basic",
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": false
+            },
+            "maxVizHeight": 300,
+            "minVizHeight": 16,
+            "minVizWidth": 8,
+            "namePlacement": "auto",
+            "orientation": "horizontal",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showUnfilled": true,
+            "sizing": "auto",
+            "valueMode": "color"
+          },
+          "pluginVersion": "12.3.0",
+          "targets": [
+            {
+              "aggregation": "count",
+              "dimensions": [
+                "coloCode"
+              ],
+              "filter": "",
+              "filterType": "builder",
+              "filters": [
+                {
+                  "field": "requestSource",
+                  "operator": "=",
+                  "value": "eyeball"
+                }
+              ],
+              "legend": "{{coloCode}}",
+              "limit": 5,
+              "name": "httpRequests_visits",
+              "orderBy": [
+                "count_DESC"
+              ],
+              "refId": "A",
+              "zone": "${zone}"
+            }
+          ],
+          "title": "Data Centers",
+          "type": "bargauge"
+        },
+        {
+          "datasource": {
+            "type": "ricoberger-cloudflare-datasource",
+            "uid": "cloudflare"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "fixedColor": "blue",
+                "mode": "fixed"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "blue",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 8,
+            "x": 16,
+            "y": 38
+          },
+          "id": 21,
+          "options": {
+            "displayMode": "basic",
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": false
+            },
+            "maxVizHeight": 300,
+            "minVizHeight": 16,
+            "minVizWidth": 8,
+            "namePlacement": "auto",
+            "orientation": "horizontal",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showUnfilled": true,
+            "sizing": "auto",
+            "valueMode": "color"
+          },
+          "pluginVersion": "12.3.0",
+          "targets": [
+            {
+              "aggregation": "count",
+              "dimensions": [
+                "edgeResponseStatus"
+              ],
+              "filter": "",
+              "filterType": "builder",
+              "filters": [
+                {
+                  "field": "requestSource",
+                  "operator": "=",
+                  "value": "eyeball"
+                }
+              ],
+              "legend": "{{edgeResponseStatus}}",
+              "limit": 5,
+              "name": "httpRequests_visits",
+              "orderBy": [
+                "count_DESC"
+              ],
+              "refId": "A",
+              "zone": "${zone}"
+            }
+          ],
+          "title": "Edge Status Codes",
+          "type": "bargauge"
+        },
+        {
+          "datasource": {
+            "type": "ricoberger-cloudflare-datasource",
+            "uid": "cloudflare"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "fixedColor": "blue",
+                "mode": "fixed"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "blue",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 8,
+            "x": 0,
+            "y": 46
+          },
+          "id": 23,
+          "options": {
+            "displayMode": "basic",
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": false
+            },
+            "maxVizHeight": 300,
+            "minVizHeight": 16,
+            "minVizWidth": 8,
+            "namePlacement": "auto",
+            "orientation": "horizontal",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showUnfilled": true,
+            "sizing": "auto",
+            "valueMode": "color"
+          },
+          "pluginVersion": "12.3.0",
+          "targets": [
+            {
+              "aggregation": "count",
+              "dimensions": [
+                "clientIP"
+              ],
+              "filter": "",
+              "filterType": "builder",
+              "filters": [
+                {
+                  "field": "requestSource",
+                  "operator": "=",
+                  "value": "eyeball"
+                }
+              ],
+              "legend": "{{clientIP}}",
+              "limit": 5,
+              "name": "httpRequests_visits",
+              "orderBy": [
+                "count_DESC"
+              ],
+              "refId": "A",
+              "zone": "${zone}"
+            }
+          ],
+          "title": "Source IPs",
+          "type": "bargauge"
+        },
+        {
+          "datasource": {
+            "type": "ricoberger-cloudflare-datasource",
+            "uid": "cloudflare"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "fixedColor": "blue",
+                "mode": "fixed"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "blue",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 8,
+            "x": 8,
+            "y": 46
+          },
+          "id": 24,
+          "options": {
+            "displayMode": "basic",
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": false
+            },
+            "maxVizHeight": 300,
+            "minVizHeight": 16,
+            "minVizWidth": 8,
+            "namePlacement": "auto",
+            "orientation": "horizontal",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showUnfilled": true,
+            "sizing": "auto",
+            "valueMode": "color"
+          },
+          "pluginVersion": "12.3.0",
+          "targets": [
+            {
+              "aggregation": "count",
+              "dimensions": [
+                "clientRequestHTTPProtocol"
+              ],
+              "filter": "",
+              "filterType": "builder",
+              "filters": [
+                {
+                  "field": "requestSource",
+                  "operator": "=",
+                  "value": "eyeball"
+                }
+              ],
+              "legend": "{{clientRequestHTTPProtocol}}",
+              "limit": 5,
+              "name": "httpRequests_visits",
+              "orderBy": [
+                "count_DESC"
+              ],
+              "refId": "A",
+              "zone": "${zone}"
+            }
+          ],
+          "title": "HTTP Versions",
+          "type": "bargauge"
+        },
+        {
+          "datasource": {
+            "type": "ricoberger-cloudflare-datasource",
+            "uid": "cloudflare"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "fixedColor": "blue",
+                "mode": "fixed"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "blue",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 8,
+            "x": 16,
+            "y": 46
+          },
+          "id": 25,
+          "options": {
+            "displayMode": "basic",
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": false
+            },
+            "maxVizHeight": 300,
+            "minVizHeight": 16,
+            "minVizWidth": 8,
+            "namePlacement": "auto",
+            "orientation": "horizontal",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showUnfilled": true,
+            "sizing": "auto",
+            "valueMode": "color"
+          },
+          "pluginVersion": "12.3.0",
+          "targets": [
+            {
+              "aggregation": "count",
+              "dimensions": [
+                "cacheStatus"
+              ],
+              "filter": "",
+              "filterType": "builder",
+              "filters": [
+                {
+                  "field": "requestSource",
+                  "operator": "=",
+                  "value": "eyeball"
+                }
+              ],
+              "legend": "{{cacheStatus}}",
+              "limit": 5,
+              "name": "httpRequests_visits",
+              "orderBy": [
+                "count_DESC"
+              ],
+              "refId": "A",
+              "zone": "${zone}"
+            }
+          ],
+          "title": "Cache Status",
+          "type": "bargauge"
+        }
+      ],
+      "title": "Details",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 22
+      },
+      "id": 10,
+      "panels": [
+        {
+          "datasource": {
+            "type": "ricoberger-cloudflare-datasource",
+            "uid": "cloudflare"
+          },
+          "fieldConfig": {
+            "defaults": {},
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 20,
+            "w": 24,
+            "x": 0,
+            "y": 127
+          },
+          "id": 8,
+          "options": {
+            "dedupStrategy": "none",
+            "enableInfiniteScrolling": false,
+            "enableLogDetails": true,
+            "showControls": false,
+            "showTime": true,
+            "sortOrder": "Descending",
+            "wrapLogMessage": false
+          },
+          "pluginVersion": "12.3.0",
+          "targets": [
+            {
+              "dimensions": [],
+              "filter": "",
+              "filterType": "builder",
+              "filters": [
+                {
+                  "field": "-",
+                  "operator": "=",
+                  "value": ""
+                }
+              ],
+              "legend": "",
+              "name": "httpRequests",
+              "refId": "A",
+              "zone": "${zone}"
+            }
+          ],
+          "title": "HTTP Requests",
+          "type": "logs"
+        }
+      ],
+      "title": "Logs",
+      "type": "row"
+    }
+  ],
+  "preload": false,
+  "schemaVersion": 42,
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "text": "cloudflare.example.com",
+          "value": "xaJCc9gQbDP7pZCW3kegy8rtdkfySCtz"
+        },
+        "definition": "",
+        "label": "Zone",
+        "name": "zone",
+        "options": [],
+        "query": {
+          "queryType": "zones"
+        },
+        "refresh": 1,
+        "regex": "",
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-24h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Cloudflare",
+  "uid": "cloudflare",
+  "version": 5
+}
