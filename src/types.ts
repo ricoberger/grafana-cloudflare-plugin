@@ -5,6 +5,7 @@ export const DEFAULT_QUERIES: Record<QueryType, Partial<Query>> = {
   zones: {},
   metrics: {
     name: 'httpRequests',
+    aggregation: undefined,
     zone: '',
     filters: [{ field: '-', operator: '=', value: '' }],
     dimensions: [],
@@ -30,6 +31,7 @@ interface QueryModelZones { }
 
 interface QueryModelMetrics {
   name?: string;
+  aggregation?: QueryModelMetricsAggregation;
   zone?: string;
   filters?: QueryModelMetricsFilter[];
   dimensions?: string[];
@@ -37,6 +39,8 @@ interface QueryModelMetrics {
   legend?: string;
   limit?: number;
 }
+
+export type QueryModelMetricsAggregation = 'sum' | 'avg' | 'count';
 
 interface QueryModelMetricsFilter {
   field: string;

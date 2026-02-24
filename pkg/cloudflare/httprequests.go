@@ -170,17 +170,21 @@ type HttpRequestsAggregateResponse struct {
 		Zones []struct {
 			HttpRequestsAdaptiveGroups []struct {
 				Dimensions map[string]any     `json:"dimensions"`
+				Count      float64            `json:"count"`
 				Sum        map[string]float64 `json:"sum"`
+				Avg        map[string]float64 `json:"avg"`
 			} `json:"httpRequestsAdaptiveGroups"`
 			HttpRequestsOverviewAdaptiveGroups []struct {
 				Dimensions map[string]any     `json:"dimensions"`
+				Count      float64            `json:"count"`
 				Sum        map[string]float64 `json:"sum"`
+				Avg        map[string]float64 `json:"avg"`
 			} `json:"httpRequestsOverviewAdaptiveGroups"`
 		} `json:"zones"`
 	} `json:"viewer"`
 }
 
-func (c *client) GetHTTPRequestsAggregate(ctx context.Context, zoneId, metricName, filters, dimensions, orderBy, legend string, limit int64, timeTo time.Time) backend.DataResponse {
+func (c *client) GetHTTPRequestsAggregate(ctx context.Context, zoneId, metricName, aggregation, filters, dimensions, orderBy, legend string, limit int64, timeTo time.Time) backend.DataResponse {
 	var group string
 	if strings.HasPrefix(metricName, "httpRequests_overview_") {
 		group = "httpRequestsOverviewAdaptiveGroups"
@@ -188,6 +192,19 @@ func (c *client) GetHTTPRequestsAggregate(ctx context.Context, zoneId, metricNam
 	} else {
 		group = "httpRequestsAdaptiveGroups"
 		metricName = strings.TrimPrefix(metricName, "httpRequests_")
+	}
+
+	var aggregationGraphQL string
+	switch aggregation {
+	case "sum":
+		aggregationGraphQL = fmt.Sprintf("sum { %s }", metricName)
+	case "avg":
+		aggregationGraphQL = fmt.Sprintf("avg { %s }", metricName)
+	case "count":
+		aggregationGraphQL = "count"
+	default:
+		c.logger.Error("Unsupported aggregation", "aggregation", aggregation)
+		return backend.ErrorResponseWithErrorSource(fmt.Errorf("unsupported aggregation: %s", aggregation))
 	}
 
 	query := fmt.Sprintf(`{
@@ -198,12 +215,12 @@ func (c *client) GetHTTPRequestsAggregate(ctx context.Context, zoneId, metricNam
 					limit: %d
 					orderBy: [%s]
 				) {
-					sum { %s }
+					%s
 					%s
 				}
 			}
 		}
-	}`, zoneId, group, filters, limit, orderBy, metricName, dimensions)
+	}`, zoneId, group, filters, limit, orderBy, aggregationGraphQL, dimensions)
 
 	res, err := graphQLRequest[HttpRequestsAggregateResponse](ctx, c.client, query)
 	if err != nil {
@@ -246,15 +263,25 @@ func (c *client) GetHTTPRequestsAggregate(ctx context.Context, zoneId, metricNam
 			slices.Sort(keys)
 			key := fmt.Sprintf("%s{%s}", metricName, strings.Join(keys, ","))
 
+			var value float64
+			switch aggregation {
+			case "sum":
+				value = r.Sum[metricName]
+			case "avg":
+				value = r.Avg[metricName]
+			case "count":
+				value = r.Count
+			}
+
 			if f, ok := frameData[key]; ok {
 				f.Timestamps = append(f.Timestamps, timestamp)
-				f.Values = append(f.Values, r.Sum[metricName])
+				f.Values = append(f.Values, value)
 				frameData[key] = f
 			} else {
 				frameData[key] = FrameData{
 					Name:       key,
 					Timestamps: []time.Time{timestamp},
-					Values:     []float64{r.Sum[metricName]},
+					Values:     []float64{value},
 					Labels:     labels,
 				}
 			}

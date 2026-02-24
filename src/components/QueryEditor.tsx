@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from 'react';
+import React, { ChangeEvent, useMemo } from 'react';
 import {
   Combobox,
   ComboboxOption,
@@ -14,9 +14,15 @@ import { GrafanaTheme2, QueryEditorProps } from '@grafana/data';
 import { css } from '@emotion/css';
 
 import { DataSource } from '../datasource';
-import { DEFAULT_QUERIES, Options, Query } from '../types';
+import {
+  DEFAULT_QUERIES,
+  Options,
+  Query,
+  QueryModelMetricsAggregation,
+} from '../types';
 import {
   filtersOptions,
+  getAggregationOptions,
   getDimensionsOptions,
   getOrderByOptions,
   nameOptions,
@@ -37,6 +43,13 @@ export function QueryEditor({
     `,
   }));
 
+  const aggregationOptions = useMemo(() => {
+    if (!query.name) {
+      return undefined;
+    }
+    return getAggregationOptions(query.name);
+  }, [query.name]);
+
   return (
     <div className={styles.marginTop}>
       <Stack direction="row" gap={1} wrap={true}>
@@ -46,10 +59,15 @@ export function QueryEditor({
             value={query.name}
             options={nameOptions.map((name) => ({ value: name }))}
             onChange={(option: ComboboxOption<string>) => {
+              const aggregationOptions = getAggregationOptions(option.value);
+
               onChange({
                 ...query,
                 ...DEFAULT_QUERIES['metrics'],
                 name: option.value,
+                aggregation: aggregationOptions
+                  ? aggregationOptions[0]
+                  : undefined,
                 zone: query.zone,
                 limit: query.limit,
               });
@@ -58,14 +76,37 @@ export function QueryEditor({
           />
         </Field>
 
-        <ZoneField
-          datasource={datasource}
-          zone={query.zone}
-          onZoneChange={(value) => {
-            onChange({ ...query, zone: value });
-            onRunQuery();
-          }}
-        />
+        {aggregationOptions && (
+          <Field label="Aggregation">
+            <Combobox<QueryModelMetricsAggregation>
+              width={15}
+              value={query.aggregation}
+              options={aggregationOptions.map((aggregation) => ({
+                value: aggregation,
+              }))}
+              onChange={(
+                option: ComboboxOption<QueryModelMetricsAggregation>,
+              ) => {
+                onChange({
+                  ...query,
+                  aggregation: option.value,
+                });
+                onRunQuery();
+              }}
+            />
+          </Field>
+        )}
+
+        {query.name && (
+          <ZoneField
+            datasource={datasource}
+            zone={query.zone}
+            onZoneChange={(value) => {
+              onChange({ ...query, zone: value });
+              onRunQuery();
+            }}
+          />
+        )}
 
         {query.name && query.name.split('_')[0] in filtersOptions && (
           <Field label="Filters">
@@ -173,13 +214,14 @@ export function QueryEditor({
           </Field>
         )}
 
-        {query.name && query.name.startsWith('httpRequests_') && (
+        {query.name && query.aggregation && (
           <Field label="Order by">
             <MultiCombobox<string>
               width={25}
               value={query.orderBy}
               options={getOrderByOptions(
                 query.name,
+                query.aggregation,
                 query.dimensions || [],
               ).map((orderBy) => ({
                 value: orderBy,
