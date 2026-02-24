@@ -9,6 +9,8 @@ import {
   IconButton,
   Stack,
   MultiCombobox,
+  RadioButtonGroup,
+  TextArea,
 } from '@grafana/ui';
 import { GrafanaTheme2, QueryEditorProps } from '@grafana/data';
 import { css } from '@emotion/css';
@@ -19,6 +21,7 @@ import {
   Options,
   Query,
   QueryModelMetricsAggregation,
+  QueryModelMetricsFilterType,
 } from '../types';
 import {
   filtersOptions,
@@ -111,84 +114,129 @@ export function QueryEditor({
         {query.name && query.name.split('_')[0] in filtersOptions && (
           <Field label="Filters">
             <Box display="flex" direction="column" grow={0} gap={1}>
-              {query.filters?.map((filter, index) => (
-                <Box key={filter.field} display="flex" grow={0} gap={1}>
-                  <Combobox<string>
-                    width={25}
-                    placeholder="Field"
-                    value={filter.field}
-                    options={filtersOptions[query.name!.split('_')[0]].map(
-                      (field) => ({
-                        value: field,
-                      }),
-                    )}
-                    onChange={(option: ComboboxOption<string>) => {
-                      const newFilters = [...(query.filters || [])];
-                      newFilters[index] = {
-                        ...newFilters[index],
-                        field: option.value,
-                      };
-                      onChange({ ...query, filters: newFilters });
+              <Box>
+                <RadioButtonGroup<QueryModelMetricsFilterType>
+                  options={[
+                    { label: 'Builder', value: 'builder' },
+                    { label: 'Code', value: 'code' },
+                  ]}
+                  value={query.filterType}
+                  onChange={(value: QueryModelMetricsFilterType) => {
+                    onChange({
+                      ...query,
+                      filterType: value,
+                      filter: '',
+                      filters: [{ field: '-', operator: '=', value: '' }],
+                    });
+                  }}
+                />
+              </Box>
+
+              {query.filterType === 'code' && (
+                <div style={{ width: '524px' }}>
+                  <TextArea
+                    placeholder={`{
+  requestSource: "eyeball"
+},
+{
+  AND: [
+    {
+      edgeResponseStatus: 200,
+      edgeResponseContentTypeName: "html"
+    }
+  ]
+}`}
+                    rows={5}
+                    value={query.filter}
+                    onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
+                      onChange({
+                        ...query,
+                        filter: event.currentTarget.value,
+                      });
                     }}
                   />
-                  <Combobox<string>
-                    width={10}
-                    value={filter.operator}
-                    options={[
-                      { value: '=' },
-                      { value: '!=' },
-                      { value: '>' },
-                      { value: '<' },
-                      { value: '>=' },
-                      { value: '<=' },
-                    ]}
-                    onChange={(option: ComboboxOption<string>) => {
-                      const newFilters = [...(query.filters || [])];
-                      newFilters[index] = {
-                        ...newFilters[index],
-                        operator: option.value,
-                      };
-                      onChange({ ...query, filters: newFilters });
-                    }}
-                  />
-                  <Input
-                    width={25}
-                    placeholder="Value"
-                    value={filter.value}
-                    onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                      const newFilters = [...(query.filters || [])];
-                      newFilters[index] = {
-                        ...newFilters[index],
-                        value: event.currentTarget.value,
-                      };
-                      onChange({ ...query, filters: newFilters });
-                    }}
-                  />
-                  {index === 0 ? (
-                    <IconButton
-                      name="plus"
-                      aria-label="Add Filter"
-                      onClick={() => {
-                        const newFilters = [
-                          ...(query.filters || []),
-                          { field: '-', operator: '=', value: '' },
-                        ];
-                        onChange({ ...query, filters: newFilters });
-                      }}
-                    />
-                  ) : (
-                    <IconButton
-                      name="minus"
-                      aria-label="Remove Filter"
-                      onClick={() => {
+                </div>
+              )}
+
+              {query.filterType === 'builder' &&
+                query.filters?.map((filter, index) => (
+                  <Box key={filter.field} display="flex" grow={0} gap={1}>
+                    <Combobox<string>
+                      width={25}
+                      placeholder="Field"
+                      value={filter.field}
+                      options={filtersOptions[query.name!.split('_')[0]].map(
+                        (field) => ({
+                          value: field,
+                        }),
+                      )}
+                      onChange={(option: ComboboxOption<string>) => {
                         const newFilters = [...(query.filters || [])];
-                        newFilters.splice(index, 1);
+                        newFilters[index] = {
+                          ...newFilters[index],
+                          field: option.value,
+                        };
                         onChange({ ...query, filters: newFilters });
                       }}
                     />
-                  )}
-                </Box>
-              ))}
+                    <Combobox<string>
+                      width={10}
+                      value={filter.operator}
+                      options={[
+                        { value: '=' },
+                        { value: '!=' },
+                        { value: '>' },
+                        { value: '<' },
+                        { value: '>=' },
+                        { value: '<=' },
+                      ]}
+                      onChange={(option: ComboboxOption<string>) => {
+                        const newFilters = [...(query.filters || [])];
+                        newFilters[index] = {
+                          ...newFilters[index],
+                          operator: option.value,
+                        };
+                        onChange({ ...query, filters: newFilters });
+                      }}
+                    />
+                    <Input
+                      width={25}
+                      placeholder="Value"
+                      value={filter.value}
+                      onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                        const newFilters = [...(query.filters || [])];
+                        newFilters[index] = {
+                          ...newFilters[index],
+                          value: event.currentTarget.value,
+                        };
+                        onChange({ ...query, filters: newFilters });
+                      }}
+                    />
+                    {index === 0 ? (
+                      <IconButton
+                        name="plus"
+                        aria-label="Add Filter"
+                        onClick={() => {
+                          const newFilters = [
+                            ...(query.filters || []),
+                            { field: '-', operator: '=', value: '' },
+                          ];
+                          onChange({ ...query, filters: newFilters });
+                        }}
+                      />
+                    ) : (
+                      <IconButton
+                        name="minus"
+                        aria-label="Remove Filter"
+                        onClick={() => {
+                          const newFilters = [...(query.filters || [])];
+                          newFilters.splice(index, 1);
+                          onChange({ ...query, filters: newFilters });
+                        }}
+                      />
+                    )}
+                  </Box>
+                ))}
             </Box>
           </Field>
         )}

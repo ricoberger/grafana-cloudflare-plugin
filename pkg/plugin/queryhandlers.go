@@ -89,15 +89,7 @@ func (d *Datasource) handleMetrics(ctx context.Context, query concurrent.Query) 
 		return backend.ErrorResponseWithErrorSource(err)
 	}
 
-	filters := cloudflare.FiltersToGraphQL(append([]models.QueryModelMetricsFilter{{
-		Field:    "datetime",
-		Operator: ">=",
-		Value:    query.DataQuery.TimeRange.From.Format(time.RFC3339),
-	}, {
-		Field:    "datetime",
-		Operator: "<=",
-		Value:    query.DataQuery.TimeRange.To.Format(time.RFC3339),
-	}}, qm.Filters...))
+	filters := cloudflare.FiltersToGraphQL(query.DataQuery.TimeRange.From.Format(time.RFC3339), query.DataQuery.TimeRange.To.Format(time.RFC3339), qm.Filter, qm.Filters)
 	dimensions := cloudflare.DimensionsToGraphQL(qm.Dimensions)
 	orderBy := cloudflare.OrderByToGraphQL(qm.OrderBy)
 	if qm.Limit == 0 {

@@ -7,6 +7,8 @@ export const DEFAULT_QUERIES: Record<QueryType, Partial<Query>> = {
     name: 'httpRequests',
     aggregation: undefined,
     zone: '',
+    filterType: 'builder',
+    filter: '',
     filters: [{ field: '-', operator: '=', value: '' }],
     dimensions: [],
     orderBy: [],
@@ -33,6 +35,8 @@ interface QueryModelMetrics {
   name?: string;
   aggregation?: QueryModelMetricsAggregation;
   zone?: string;
+  filterType?: QueryModelMetricsFilterType;
+  filter?: string;
   filters?: QueryModelMetricsFilter[];
   dimensions?: string[];
   orderBy?: string[];
@@ -41,6 +45,8 @@ interface QueryModelMetrics {
 }
 
 export type QueryModelMetricsAggregation = 'sum' | 'avg' | 'count';
+
+export type QueryModelMetricsFilterType = 'builder' | 'code';
 
 interface QueryModelMetricsFilter {
   field: string;
