@@ -8,13 +8,14 @@ const (
 )
 
 type QueryModelMetrics struct {
-	Name       string                    `json:"name"`
-	Zone       string                    `json:"zone"`
-	Filters    []QueryModelMetricsFilter `json:"filters"`
-	Dimensions []string                  `json:"dimensions"`
-	OrderBy    []string                  `json:"orderBy"`
-	Legend     string                    `json:"legend"`
-	Limit      int64                     `json:"limit"`
+	Name        string                    `json:"name"`
+	Aggregation string                    `json:"aggregation"`
+	Zone        string                    `json:"zone"`
+	Filters     []QueryModelMetricsFilter `json:"filters"`
+	Dimensions  []string                  `json:"dimensions"`
+	OrderBy     []string                  `json:"orderBy"`
+	Legend      string                    `json:"legend"`
+	Limit       int64                     `json:"limit"`
 }
 
 type QueryModelMetricsFilter struct {
