@@ -7,14 +7,20 @@ import {
   DataQueryResponse,
   LegacyMetricFindQueryOptions,
   MetricFindValue,
+  SupplementaryQueryType,
+  SupplementaryQueryOptions,
+  DataSourceWithSupplementaryQueriesSupport,
 } from '@grafana/data';
 import { DataSourceWithBackend, getTemplateSrv } from '@grafana/runtime';
 import { lastValueFrom, Observable } from 'rxjs';
+import { cloneDeep } from 'lodash';
 
 import { Query, Options, DEFAULT_QUERY } from './types';
 import { VariableSupport } from './variablesupport';
 
-export class DataSource extends DataSourceWithBackend<Query, Options> {
+export class DataSource
+  extends DataSourceWithBackend<Query, Options>
+  implements DataSourceWithSupplementaryQueriesSupport<Query> {
   constructor(instanceSettings: DataSourceInstanceSettings<Options>) {
     super(instanceSettings);
     this.variables = new VariableSupport(this);
@@ -82,5 +88,52 @@ export class DataSource extends DataSourceWithBackend<Query, Options> {
     }
 
     return true;
+  }
+
+  getSupportedSupplementaryQueryTypes(): SupplementaryQueryType[] {
+    return [SupplementaryQueryType.LogsVolume];
+  }
+
+  getSupplementaryRequest(
+    type: SupplementaryQueryType,
+    request: DataQueryRequest<Query>,
+    options?: SupplementaryQueryOptions,
+  ): DataQueryRequest<Query> | undefined {
+    if (!this.getSupportedSupplementaryQueryTypes().includes(type)) {
+      return undefined;
+    }
+
+    const logsVolumeOption = { ...options, type };
+    const logsVolumeRequest = cloneDeep(request);
+    const targets = logsVolumeRequest.targets
+      .map((query) => this.getSupplementaryQuery(logsVolumeOption, query))
+      .filter((query): query is Query => query?.name === 'httpRequests');
+
+    if (!targets.length) {
+      return undefined;
+    }
+
+    return { ...logsVolumeRequest, targets };
+  }
+
+  getSupplementaryQuery(
+    options: SupplementaryQueryOptions,
+    query: Query,
+  ): Query | undefined {
+    if (query.hide) {
+      return undefined;
+    }
+
+    switch (options.type) {
+      case SupplementaryQueryType.LogsVolume: {
+        return {
+          ...query,
+          queryType: 'logsvolume',
+          refId: `log-volume-${query.refId}`,
+        };
+      }
+      default:
+        return undefined;
+    }
   }
 }

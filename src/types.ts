@@ -15,6 +15,13 @@ export const DEFAULT_QUERIES: Record<QueryType, Partial<Query>> = {
     legend: '',
     limit: 100,
   },
+  logsvolume: {
+    name: 'httpRequests',
+    zone: '',
+    filterType: 'builder',
+    filter: '',
+    filters: [{ field: '-', operator: '=', value: '' }],
+  },
 };
 
 export const DEFAULT_QUERY: Partial<Query> = {
@@ -23,7 +30,7 @@ export const DEFAULT_QUERY: Partial<Query> = {
   limit: 100,
 };
 
-export type QueryType = 'zones' | 'metrics';
+export type QueryType = 'zones' | 'metrics' | 'logsvolume';
 
 export interface Query extends DataQuery, QueryModelZones, QueryModelMetrics {
   queryType: QueryType;

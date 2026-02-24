@@ -15,6 +15,7 @@ import (
 type Client interface {
 	GetZones(ctx context.Context) ([]zones.Zone, error)
 	GetHTTPRequests(ctx context.Context, zoneId, filters string, limit int64) backend.DataResponse
+	GetHTTPRequestsVolumes(ctx context.Context, zoneId, filtersInfo, filtersWarning, filtersError, filtersCritical string) backend.DataResponse
 	GetHTTPRequestsAggregate(ctx context.Context, zoneId, metricName, aggregation, filters, dimensions, orderBy, legend string, limit int64, timeTo time.Time) backend.DataResponse
 }
 

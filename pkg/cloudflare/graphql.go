@@ -55,7 +55,7 @@ var filterOperators = map[string]string{
 	"<=": "_leq",
 }
 
-func FiltersToGraphQL(timeFrom, timeTo, filter string, filters []models.QueryModelMetricsFilter) string {
+func FiltersToGraphQL(timeFrom, timeTo, filter string, filters []models.QueryModelMetricsFilter, additionalFilter string) string {
 	// Filter out all filters where the field value is "-", as this is used to
 	// indicate that the filter should be ignored. This allows us to display a
 	// new empty filter in the UI without it affecting the query.
@@ -72,10 +72,16 @@ func FiltersToGraphQL(timeFrom, timeTo, filter string, filters []models.QueryMod
 	// If there is no filter and no filters, return a filter with only the time
 	// range.
 	if filter == "" && len(filters) == 0 {
+		if additionalFilter != "" {
+			return fmt.Sprintf("filter: { datetime_geq: \"%s\", datetime_leq: \"%s\", %s }", timeFrom, timeTo, additionalFilter)
+		}
 		return fmt.Sprintf("filter: { datetime_geq: \"%s\", datetime_leq: \"%s\" }", timeFrom, timeTo)
 	}
 
 	if filter != "" {
+		if additionalFilter != "" {
+			return fmt.Sprintf("filter: { AND: [{ datetime_geq: \"%s\", datetime_leq: \"%s\" }, { %s }  %s ] }", timeFrom, timeTo, additionalFilter, strings.ReplaceAll(strings.ReplaceAll(filter, "\n", ""), "\r", ""))
+		}
 		return fmt.Sprintf("filter: { AND: [{ datetime_geq: \"%s\", datetime_leq: \"%s\" },  %s ] }", timeFrom, timeTo, strings.ReplaceAll(strings.ReplaceAll(filter, "\n", ""), "\r", ""))
 	}
 
@@ -96,6 +102,9 @@ func FiltersToGraphQL(timeFrom, timeTo, filter string, filters []models.QueryMod
 				f.Value = fmt.Sprintf(`"%s"`, f.Value)
 			}
 			filterStrings = append(filterStrings, fmt.Sprintf("%s%s: %s", f.Field, filterOperators[f.Operator], f.Value))
+		}
+		if additionalFilter != "" {
+			return fmt.Sprintf("filter: { AND: [{ datetime_geq: \"%s\", datetime_leq: \"%s\" }, { %s }, { %s }] }", timeFrom, timeTo, additionalFilter, strings.Join(filterStrings, ", "))
 		}
 		return fmt.Sprintf("filter: { AND: [{ datetime_geq: \"%s\", datetime_leq: \"%s\" }, { %s }] }", timeFrom, timeTo, strings.Join(filterStrings, ", "))
 	}
