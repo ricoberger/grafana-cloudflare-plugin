@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"slices"
+	"sort"
 	"strings"
 	"time"
 
@@ -235,7 +236,7 @@ func (c *client) GetHTTPRequestsAggregate(ctx context.Context, zoneId, metricNam
 			groups = z.HttpRequestsOverviewAdaptiveGroups
 		}
 
-		for _, r := range groups {
+		for i, r := range groups {
 			var keys []string
 			timestamp := timeTo
 			var labels = make(map[string]string)
@@ -279,6 +280,7 @@ func (c *client) GetHTTPRequestsAggregate(ctx context.Context, zoneId, metricNam
 				frameData[key] = f
 			} else {
 				frameData[key] = FrameData{
+					Index:      i,
 					Name:       key,
 					Timestamps: []time.Time{timestamp},
 					Values:     []float64{value},
@@ -290,7 +292,17 @@ func (c *client) GetHTTPRequestsAggregate(ctx context.Context, zoneId, metricNam
 
 	var response backend.DataResponse
 
+	// Convert the FrameData map to a slice and sort it by the original index to
+	// maintain the order of the groups as returned by the API.
+	var frameDataSlice []FrameData
 	for _, v := range frameData {
+		frameDataSlice = append(frameDataSlice, v)
+	}
+	sort.Slice(frameDataSlice, func(i, j int) bool {
+		return frameDataSlice[i].Index < frameDataSlice[j].Index
+	})
+
+	for _, v := range frameDataSlice {
 		name := parseLegend(v.Name, legend, v.Labels)
 
 		frame := data.NewFrame(

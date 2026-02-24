@@ -9,6 +9,7 @@ import (
 var legendReplacer = regexp.MustCompile(`\{\{\s*(.+?)\s*\}\}`)
 
 type FrameData struct {
+	Index      int
 	Name       string
 	Timestamps []time.Time
 	Values     []float64
