@@ -3,6 +3,32 @@
 The Grafana Cloudflare Plugin allows you to explore your Cloudflare metrics
 within Grafana.
 
+![Dashboard Overview](https://raw.githubusercontent.com/ricoberger/grafana-cloudflare-plugin/refs/heads/main/src/img/screenshots/dashboard-overview.png)
+
+<div align="center">
+  <table>
+    <tr>
+      <td><img src="https://raw.githubusercontent.com/ricoberger/grafana-cloudflare-plugin/refs/heads/main/src/img/screenshots/dashboard-details.png" /></td>
+      <td><img src="https://raw.githubusercontent.com/ricoberger/grafana-cloudflare-plugin/refs/heads/main/src/img/screenshots/explore.png" /></td>
+    </tr>
+  </table>
+</div>
+
+## Features
+
+- Explore your Cloudflare metrics via the
+  [Cloudflare GraphQL Analytics API](https://developers.cloudflare.com/analytics/graphql-api/)
+- Support for multiple zones, which are fetched automatically or can be
+  specified manually
+- Supports the following Cloudflare metrics:
+  - Raw HTTP requests with adaptive sampling
+  - Aggregated HTTP requests data with adaptive sampling
+  - High-level summary of HTTP requests made by end users
+- Raw events are visualized as
+  [logs](https://grafana.com/docs/grafana/latest/visualizations/explore/logs-integration/)
+- Aggregated data supports instant and range queries, when a `date*` dimension
+  is used in the query
+
 ## Installation
 
 1. Before you can install the plugin, you have to add

@@ -43,7 +43,20 @@
         "url": "https://github.com/ricoberger"
       }
     ],
-    "screenshots": [],
+    "screenshots": [
+      {
+        "name": "Example Bookinfo",
+        "path": "img/screenshots/dashboard-overview.png"
+      },
+      {
+        "name": "Example OTEL Demo",
+        "path": "img/screenshots/dashboard-details.png"
+      },
+      {
+        "name": "Configuration",
+        "path": "img/screenshots/explore.png"
+      }
+    ],
     "version": "%VERSION%",
     "updated": "%TODAY%"
   },
