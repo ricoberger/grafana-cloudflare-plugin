@@ -151,8 +151,8 @@ func (d *Datasource) handleLogsvolume(ctx context.Context, query concurrent.Quer
 	span.SetAttributes(attribute.Key("filtersError").String(filtersError))
 	span.SetAttributes(attribute.Key("filtersCritical").String(filtersCritical))
 
-	switch {
-	case qm.Name == "httpRequests":
+	switch qm.Name {
+	case "httpRequests":
 		return d.cloudflareClient.GetHTTPRequestsVolumes(ctx, qm.Zone, filtersInfo, filtersWarning, filtersError, filtersCritical)
 	default:
 		err := fmt.Errorf("unsupported metric name: %s", qm.Name)
