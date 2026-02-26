@@ -107,7 +107,10 @@ export class DataSource
     const logsVolumeRequest = cloneDeep(request);
     const targets = logsVolumeRequest.targets
       .map((query) => this.getSupplementaryQuery(logsVolumeOption, query))
-      .filter((query): query is Query => query?.name === 'httpRequests');
+      .filter(
+        (query): query is Query =>
+          query?.name === 'httpRequests' || query?.name === 'firewallEvents',
+      );
 
     if (!targets.length) {
       return undefined;

@@ -15,6 +15,8 @@ export const nameOptions: string[] = [
   'httpRequests_edgeTimeToFirstByteMs',
   'httpRequests_originResponseDurationMs',
   'httpRequests_visits',
+  'firewallEvents',
+  'firewallEvents_events',
 ];
 
 export const getAggregationOptions = (
@@ -57,6 +59,10 @@ export const getAggregationOptions = (
     return ['sum', 'count'];
   }
 
+  if (['firewallEvents_events'].includes(name)) {
+    return ['count'];
+  }
+
   return undefined;
 };
 
@@ -67,6 +73,10 @@ export const getFiltersOptions = (name: string): string[] => {
 
   if (name.startsWith('httpRequests')) {
     return filtersOptions['httpRequests'];
+  }
+
+  if (name.startsWith('firewallEvents')) {
+    return filtersOptions['firewallEvents'];
   }
 
   return [];
@@ -125,6 +135,44 @@ const filtersOptions: Record<string, string[]> = {
     'wafSqliAttackScore',
     'wafXssAttackScore',
   ],
+  firewallEvents: [
+    '-',
+    'action',
+    'clientASNDescription',
+    'clientAsn',
+    'clientCountryName',
+    'clientIP',
+    'clientIPClass',
+    'clientRefererHost',
+    'clientRefererPath',
+    'clientRefererQuery',
+    'clientRefererScheme',
+    'clientRequestHTTPHost',
+    'clientRequestHTTPMethodName',
+    'clientRequestHTTPProtocol',
+    'clientRequestPath',
+    'clientRequestQuery',
+    'clientRequestScheme',
+    'description',
+    'edgeColoName',
+    'edgeResponseStatus',
+    'kind',
+    'matchIndex',
+    'originResponseStatus',
+    'originatorRayName',
+    'rayName',
+    'ref',
+    'ruleId',
+    'rulesetId',
+    'source',
+    'userAgent',
+    'verifiedBotCategory',
+    'wafAttackScore',
+    'wafAttackScoreClass',
+    'wafRceAttackScore',
+    'wafSqliAttackScore',
+    'wafXssAttackScore',
+  ],
 };
 
 export const getDimensionsOptions = (name: string): string[] => {
@@ -134,6 +182,10 @@ export const getDimensionsOptions = (name: string): string[] => {
 
   if (name.startsWith('httpRequests_')) {
     return dimensionsOptions['httpRequests'];
+  }
+
+  if (name.startsWith('firewallEvents')) {
+    return dimensionsOptions['firewallEvents'];
   }
 
   return [];
@@ -193,6 +245,49 @@ const dimensionsOptions: Record<string, string[]> = {
     'userAgent',
     'userAgentBrowser',
     'userAgentOS',
+    'verifiedBotCategory',
+    'wafAttackScore',
+    'wafAttackScoreClass',
+    'wafRceAttackScore',
+    'wafSqliAttackScore',
+    'wafXssAttackScore',
+  ],
+  firewallEvents: [
+    'action',
+    'clientASNDescription',
+    'clientAsn',
+    'clientCountryName',
+    'clientIP',
+    'clientIPClass',
+    'clientRefererHost',
+    'clientRefererPath',
+    'clientRefererQuery',
+    'clientRefererScheme',
+    'clientRequestHTTPHost',
+    'clientRequestHTTPMethodName',
+    'clientRequestHTTPProtocol',
+    'clientRequestPath',
+    'clientRequestQuery',
+    'clientRequestScheme',
+    'date',
+    'datetime',
+    'datetimeFifteenMinutes',
+    'datetimeFiveMinutes',
+    'datetimeHour',
+    'datetimeMinute',
+    'description',
+    'edgeColoName',
+    'edgeResponseStatus',
+    'kind',
+    'matchIndex',
+    'originResponseStatus',
+    'originatorRayName',
+    'rayName',
+    'ref',
+    'ruleId',
+    'rulesetId',
+    'source',
+    'userAgent',
     'verifiedBotCategory',
     'wafAttackScore',
     'wafAttackScoreClass',

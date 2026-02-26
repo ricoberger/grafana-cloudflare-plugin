@@ -17,6 +17,9 @@ type Client interface {
 	GetHTTPRequests(ctx context.Context, zoneId, filters string, limit int64) backend.DataResponse
 	GetHTTPRequestsVolumes(ctx context.Context, zoneId, filtersInfo, filtersWarning, filtersError, filtersCritical string) backend.DataResponse
 	GetHTTPRequestsAggregate(ctx context.Context, zoneId, metricName, aggregation, filters, dimensions, orderBy, legend string, limit int64, timeTo time.Time) backend.DataResponse
+	GetFirewallEvents(ctx context.Context, zoneId, filters string, limit int64) backend.DataResponse
+	GetFirewallEventsVolumes(ctx context.Context, zoneId, filtersInfo, filtersWarning, filtersError, filtersCritical string) backend.DataResponse
+	GetFirewallEventsAggregate(ctx context.Context, zoneId, filters, dimensions, orderBy, legend string, limit int64, timeTo time.Time) backend.DataResponse
 }
 
 type client struct {

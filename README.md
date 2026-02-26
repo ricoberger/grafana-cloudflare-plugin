@@ -24,6 +24,8 @@ within Grafana.
   - Raw HTTP requests with adaptive sampling
   - Aggregated HTTP requests data with adaptive sampling
   - High-level summary of HTTP requests made by end users
+  - Raw Firewall events with adaptive sampling
+  - Aggregated Firewall events with adaptive sampling
 - Raw events are visualized as
   [logs](https://grafana.com/docs/grafana/latest/visualizations/explore/logs-integration/)
 - Aggregated data supports instant and range queries, when a `date*` dimension
