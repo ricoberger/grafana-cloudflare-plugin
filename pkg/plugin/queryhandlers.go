@@ -109,6 +109,10 @@ func (d *Datasource) handleMetrics(ctx context.Context, query concurrent.Query) 
 		return d.cloudflareClient.GetHTTPRequests(ctx, qm.Zone, filters, qm.Limit)
 	case strings.HasPrefix(qm.Name, "httpRequests_"):
 		return d.cloudflareClient.GetHTTPRequestsAggregate(ctx, qm.Zone, qm.Name, qm.Aggregation, filters, dimensions, orderBy, qm.Legend, qm.Limit, query.DataQuery.TimeRange.To)
+	case qm.Name == "firewallEvents":
+		return d.cloudflareClient.GetFirewallEvents(ctx, qm.Zone, filters, qm.Limit)
+	case strings.HasPrefix(qm.Name, "firewallEvents_"):
+		return d.cloudflareClient.GetFirewallEventsAggregate(ctx, qm.Zone, filters, dimensions, orderBy, qm.Legend, qm.Limit, query.DataQuery.TimeRange.To)
 	default:
 		err := fmt.Errorf("unsupported metric name: %s", qm.Name)
 		d.logger.Error("Failed to unmarshal query model", "error", err.Error())
@@ -138,22 +142,23 @@ func (d *Datasource) handleLogsvolume(ctx context.Context, query concurrent.Quer
 		return backend.ErrorResponseWithErrorSource(err)
 	}
 
-	filtersInfo := cloudflare.FiltersToGraphQL(query.DataQuery.TimeRange.From.Format(time.RFC3339), query.DataQuery.TimeRange.To.Format(time.RFC3339), qm.Filter, qm.Filters, "edgeResponseStatus_lt: 300")
-	filtersWarning := cloudflare.FiltersToGraphQL(query.DataQuery.TimeRange.From.Format(time.RFC3339), query.DataQuery.TimeRange.To.Format(time.RFC3339), qm.Filter, qm.Filters, "edgeResponseStatus_geq: 300, edgeResponseStatus_lt: 400")
-	filtersError := cloudflare.FiltersToGraphQL(query.DataQuery.TimeRange.From.Format(time.RFC3339), query.DataQuery.TimeRange.To.Format(time.RFC3339), qm.Filter, qm.Filters, "edgeResponseStatus_geq: 400, edgeResponseStatus_lt: 500")
-	filtersCritical := cloudflare.FiltersToGraphQL(query.DataQuery.TimeRange.From.Format(time.RFC3339), query.DataQuery.TimeRange.To.Format(time.RFC3339), qm.Filter, qm.Filters, "edgeResponseStatus_geq: 500")
-
-	d.logger.Info("handleLogsvolume query", "name", qm.Name, "zone", qm.Zone, "filtersInfo", filtersInfo, "filtersWarning", filtersWarning, "filtersError", filtersError, "filtersCritical", filtersCritical)
+	d.logger.Info("handleLogsvolume query", "name", qm.Name, "zone", qm.Zone)
 	span.SetAttributes(attribute.Key("name").String(qm.Name))
 	span.SetAttributes(attribute.Key("zone").String(qm.Zone))
-	span.SetAttributes(attribute.Key("filtersInfo").String(filtersInfo))
-	span.SetAttributes(attribute.Key("filtersWarning").String(filtersWarning))
-	span.SetAttributes(attribute.Key("filtersError").String(filtersError))
-	span.SetAttributes(attribute.Key("filtersCritical").String(filtersCritical))
 
 	switch qm.Name {
 	case "httpRequests":
+		filtersInfo := cloudflare.FiltersToGraphQL(query.DataQuery.TimeRange.From.Format(time.RFC3339), query.DataQuery.TimeRange.To.Format(time.RFC3339), qm.Filter, qm.Filters, "edgeResponseStatus_lt: 300")
+		filtersWarning := cloudflare.FiltersToGraphQL(query.DataQuery.TimeRange.From.Format(time.RFC3339), query.DataQuery.TimeRange.To.Format(time.RFC3339), qm.Filter, qm.Filters, "edgeResponseStatus_geq: 300, edgeResponseStatus_lt: 400")
+		filtersError := cloudflare.FiltersToGraphQL(query.DataQuery.TimeRange.From.Format(time.RFC3339), query.DataQuery.TimeRange.To.Format(time.RFC3339), qm.Filter, qm.Filters, "edgeResponseStatus_geq: 400, edgeResponseStatus_lt: 500")
+		filtersCritical := cloudflare.FiltersToGraphQL(query.DataQuery.TimeRange.From.Format(time.RFC3339), query.DataQuery.TimeRange.To.Format(time.RFC3339), qm.Filter, qm.Filters, "edgeResponseStatus_geq: 500")
 		return d.cloudflareClient.GetHTTPRequestsVolumes(ctx, qm.Zone, filtersInfo, filtersWarning, filtersError, filtersCritical)
+	case "firewallEvents":
+		filtersInfo := cloudflare.FiltersToGraphQL(query.DataQuery.TimeRange.From.Format(time.RFC3339), query.DataQuery.TimeRange.To.Format(time.RFC3339), qm.Filter, qm.Filters, "wafAttackScoreClass: clean")
+		filtersWarning := cloudflare.FiltersToGraphQL(query.DataQuery.TimeRange.From.Format(time.RFC3339), query.DataQuery.TimeRange.To.Format(time.RFC3339), qm.Filter, qm.Filters, "wafAttackScoreClass: likely_clean")
+		filtersError := cloudflare.FiltersToGraphQL(query.DataQuery.TimeRange.From.Format(time.RFC3339), query.DataQuery.TimeRange.To.Format(time.RFC3339), qm.Filter, qm.Filters, "wafAttackScoreClass: likely_attack")
+		filtersCritical := cloudflare.FiltersToGraphQL(query.DataQuery.TimeRange.From.Format(time.RFC3339), query.DataQuery.TimeRange.To.Format(time.RFC3339), qm.Filter, qm.Filters, "wafAttackScoreClass: attack")
+		return d.cloudflareClient.GetFirewallEventsVolumes(ctx, qm.Zone, filtersInfo, filtersWarning, filtersError, filtersCritical)
 	default:
 		err := fmt.Errorf("unsupported metric name: %s", qm.Name)
 		d.logger.Error("Failed to unmarshal query model", "error", err.Error())

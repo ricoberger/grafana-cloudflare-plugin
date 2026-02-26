@@ -238,27 +238,29 @@ export function QueryEditor({
           </Field>
         )}
 
-        {query.name && query.name.startsWith('httpRequests_') && (
-          <Field label="Dimensions">
-            <MultiCombobox<string>
-              width={25}
-              value={query.dimensions}
-              options={getDimensionsOptions(query.name).map((dimension) => ({
-                value: dimension,
-              }))}
-              // eslint-disable-next-line @typescript-eslint/array-type
-              onChange={(option: ComboboxOption<string>[]) => {
-                onChange({
-                  ...query,
-                  dimensions: Array.from(option.values()).map(
-                    (value) => value.value,
-                  ),
-                });
-                onRunQuery();
-              }}
-            />
-          </Field>
-        )}
+        {query.name &&
+          (query.name.startsWith('httpRequests_') ||
+            query.name.startsWith('firewallEvents_')) && (
+            <Field label="Dimensions">
+              <MultiCombobox<string>
+                width={25}
+                value={query.dimensions}
+                options={getDimensionsOptions(query.name).map((dimension) => ({
+                  value: dimension,
+                }))}
+                // eslint-disable-next-line @typescript-eslint/array-type
+                onChange={(option: ComboboxOption<string>[]) => {
+                  onChange({
+                    ...query,
+                    dimensions: Array.from(option.values()).map(
+                      (value) => value.value,
+                    ),
+                  });
+                  onRunQuery();
+                }}
+              />
+            </Field>
+          )}
 
         {query.name && query.aggregation && (
           <Field label="Order by">
