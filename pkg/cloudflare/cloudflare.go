@@ -2,6 +2,7 @@ package cloudflare
 
 import (
 	"context"
+	"fmt"
 	"sync"
 	"time"
 
@@ -38,6 +39,8 @@ func NewClient(logger log.Logger, authMethod, apiToken, apiEmail, apiKey string)
 	case "apiKey":
 		opts = append(opts, option.WithAPIEmail(apiEmail))
 		opts = append(opts, option.WithAPIKey(apiKey))
+	default:
+		return nil, fmt.Errorf("invalid authentication method")
 	}
 
 	cloudflareClient := cloudflare.NewClient(opts...)
