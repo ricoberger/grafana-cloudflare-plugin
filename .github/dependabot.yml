@@ -5,6 +5,8 @@ updates:
     directory: '/'
     schedule:
       interval: 'monthly'
+    assignees:
+      - 'ricoberger'
     groups:
       unit-test:
         patterns:
