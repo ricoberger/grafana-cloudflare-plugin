@@ -1,0 +1,1633 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 0,
+  "links": [],
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 4,
+      "panels": [],
+      "title": "Traffic Analysis",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "ricoberger-cloudflare-datasource",
+        "uid": "cloudflare"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 6,
+        "x": 0,
+        "y": 1
+      },
+      "id": 6,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "sum"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "aggregation": "count",
+          "datasource": {
+            "type": "ricoberger-cloudflare-datasource",
+            "uid": "cloudflare"
+          },
+          "dimensions": [
+            "datetimeFiveMinutes"
+          ],
+          "filter": "",
+          "filterType": "builder",
+          "filters": [
+            {
+              "field": "requestSource",
+              "operator": "=",
+              "value": "eyeball"
+            }
+          ],
+          "legend": "",
+          "limit": 1000,
+          "name": "httpRequests_visits",
+          "orderBy": [],
+          "refId": "A",
+          "zone": "${zone}"
+        }
+      ],
+      "title": "Total",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "ricoberger-cloudflare-datasource",
+        "uid": "cloudflare"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "orange",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 6,
+        "x": 6,
+        "y": 1
+      },
+      "id": 7,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "sum"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "aggregation": "count",
+          "datasource": {
+            "type": "ricoberger-cloudflare-datasource",
+            "uid": "cloudflare"
+          },
+          "dimensions": [
+            "datetimeFiveMinutes"
+          ],
+          "filter": "{\n  requestSource: \"eyeball\"\n  securityAction_in: [\n    \"block\",\n    \"challenge\",\n    \"jschallenge\",\n    \"managed_challenge\"\n  ]\n}",
+          "filterType": "code",
+          "filters": [
+            {
+              "field": "-",
+              "operator": "=",
+              "value": ""
+            }
+          ],
+          "legend": "",
+          "limit": 1000,
+          "name": "httpRequests_visits",
+          "orderBy": [],
+          "refId": "A",
+          "zone": "${zone}"
+        }
+      ],
+      "title": "Mitigated by Cloudflare",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "ricoberger-cloudflare-datasource",
+        "uid": "cloudflare"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 6,
+        "x": 12,
+        "y": 1
+      },
+      "id": 8,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "sum"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "aggregation": "count",
+          "datasource": {
+            "type": "ricoberger-cloudflare-datasource",
+            "uid": "cloudflare"
+          },
+          "dimensions": [
+            "datetimeFiveMinutes"
+          ],
+          "filter": "{\n  requestSource: \"eyeball\"\n  securityAction_notin: [\n    \"block\",\n    \"challenge\",\n    \"jschallenge\",\n    \"managed_challenge\"\n  ]\n},\n{\n  AND: [\n    {\n      cacheStatus_notin: [\n        \"miss\",\n        \"expired\",\n        \"bypass\",\n        \"dynamic\"\n      ]\n    }\n  ]\n}",
+          "filterType": "code",
+          "filters": [
+            {
+              "field": "-",
+              "operator": "=",
+              "value": ""
+            }
+          ],
+          "legend": "",
+          "limit": 1000,
+          "name": "httpRequests_visits",
+          "orderBy": [],
+          "refId": "A",
+          "zone": "${zone}"
+        }
+      ],
+      "title": "Served by Cloudflare",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "ricoberger-cloudflare-datasource",
+        "uid": "cloudflare"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "purple",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 6,
+        "x": 18,
+        "y": 1
+      },
+      "id": 9,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "sum"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "aggregation": "count",
+          "datasource": {
+            "type": "ricoberger-cloudflare-datasource",
+            "uid": "cloudflare"
+          },
+          "dimensions": [
+            "datetimeFiveMinutes"
+          ],
+          "filter": "{\n  requestSource: \"eyeball\"\n},\n{\n  AND: [\n    {\n      cacheStatus_in: [\n        \"miss\",\n        \"expired\",\n        \"bypass\",\n        \"dynamic\"\n      ]\n    }\n  ]\n}",
+          "filterType": "code",
+          "filters": [
+            {
+              "field": "-",
+              "operator": "=",
+              "value": ""
+            }
+          ],
+          "legend": "",
+          "limit": 1000,
+          "name": "httpRequests_visits",
+          "orderBy": [],
+          "refId": "A",
+          "zone": "${zone}"
+        }
+      ],
+      "title": "Served by Origin",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "ricoberger-cloudflare-datasource",
+        "uid": "cloudflare"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "orange",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Mitigated by Cloudflare"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "orange",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Served by Cloudflare"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Served by Origin"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "purple",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 6
+      },
+      "id": 10,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "aggregation": "count",
+          "datasource": {
+            "type": "ricoberger-cloudflare-datasource",
+            "uid": "cloudflare"
+          },
+          "dimensions": [
+            "datetimeFiveMinutes"
+          ],
+          "filter": "{\n  requestSource: \"eyeball\"\n  securityAction_in: [\n    \"block\",\n    \"challenge\",\n    \"jschallenge\",\n    \"managed_challenge\"\n  ]\n}",
+          "filterType": "code",
+          "filters": [
+            {
+              "field": "-",
+              "operator": "=",
+              "value": ""
+            }
+          ],
+          "legend": "Mitigated by Cloudflare",
+          "limit": 1000,
+          "name": "httpRequests_visits",
+          "orderBy": [],
+          "refId": "A",
+          "zone": "${zone}"
+        },
+        {
+          "aggregation": "count",
+          "datasource": {
+            "type": "ricoberger-cloudflare-datasource",
+            "uid": "cloudflare"
+          },
+          "dimensions": [
+            "datetimeFiveMinutes"
+          ],
+          "filter": "{\n  requestSource: \"eyeball\"\n  securityAction_notin: [\n    \"block\",\n    \"challenge\",\n    \"jschallenge\",\n    \"managed_challenge\"\n  ]\n},\n{\n  AND: [\n    {\n      cacheStatus_notin: [\n        \"miss\",\n        \"expired\",\n        \"bypass\",\n        \"dynamic\"\n      ]\n    }\n  ]\n}",
+          "filterType": "code",
+          "filters": [
+            {
+              "field": "-",
+              "operator": "=",
+              "value": ""
+            }
+          ],
+          "hide": false,
+          "legend": "Served by Cloudflare",
+          "limit": 1000,
+          "name": "httpRequests_visits",
+          "orderBy": [],
+          "queryType": "metrics",
+          "refId": "B",
+          "zone": "${zone}"
+        },
+        {
+          "aggregation": "count",
+          "datasource": {
+            "type": "ricoberger-cloudflare-datasource",
+            "uid": "cloudflare"
+          },
+          "dimensions": [
+            "datetimeFiveMinutes"
+          ],
+          "filter": "{\n  requestSource: \"eyeball\"\n},\n{\n  AND: [\n    {\n      cacheStatus_in: [\n        \"miss\",\n        \"expired\",\n        \"bypass\",\n        \"dynamic\"\n      ]\n    }\n  ]\n}",
+          "filterType": "code",
+          "filters": [
+            {
+              "field": "-",
+              "operator": "=",
+              "value": ""
+            }
+          ],
+          "hide": false,
+          "legend": "Served by Origin",
+          "limit": 1000,
+          "name": "httpRequests_visits",
+          "orderBy": [],
+          "queryType": "metrics",
+          "refId": "C",
+          "zone": "${zone}"
+        }
+      ],
+      "title": "Traffic",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 16
+      },
+      "id": 3,
+      "panels": [
+        {
+          "datasource": {
+            "type": "ricoberger-cloudflare-datasource",
+            "uid": "cloudflare"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "purple",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 5,
+            "w": 6,
+            "x": 0,
+            "y": 17
+          },
+          "id": 11,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "percentChangeColorMode": "standard",
+            "reduceOptions": {
+              "calcs": [
+                "sum"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "12.3.0",
+          "targets": [
+            {
+              "aggregation": "count",
+              "datasource": {
+                "type": "ricoberger-cloudflare-datasource",
+                "uid": "cloudflare"
+              },
+              "dimensions": [
+                "datetimeFiveMinutes"
+              ],
+              "filter": "{\n  requestSource: \"eyeball\"\n  wafAttackScore_geq: 1\n  wafAttackScore_leq: 20\n}",
+              "filterType": "code",
+              "filters": [
+                {
+                  "field": "-",
+                  "operator": "=",
+                  "value": ""
+                }
+              ],
+              "legend": "",
+              "limit": 1000,
+              "name": "httpRequests_visits",
+              "orderBy": [],
+              "refId": "A",
+              "zone": "${zone}"
+            }
+          ],
+          "title": "Attack",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "ricoberger-cloudflare-datasource",
+            "uid": "cloudflare"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 5,
+            "w": 6,
+            "x": 6,
+            "y": 17
+          },
+          "id": 12,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "percentChangeColorMode": "standard",
+            "reduceOptions": {
+              "calcs": [
+                "sum"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "12.3.0",
+          "targets": [
+            {
+              "aggregation": "count",
+              "datasource": {
+                "type": "ricoberger-cloudflare-datasource",
+                "uid": "cloudflare"
+              },
+              "dimensions": [
+                "datetimeFiveMinutes"
+              ],
+              "filter": "{\n  requestSource: \"eyeball\"\n  wafAttackScore_geq: 21\n  wafAttackScore_leq: 50\n}",
+              "filterType": "code",
+              "filters": [
+                {
+                  "field": "-",
+                  "operator": "=",
+                  "value": ""
+                }
+              ],
+              "legend": "",
+              "limit": 1000,
+              "name": "httpRequests_visits",
+              "orderBy": [],
+              "refId": "A",
+              "zone": "${zone}"
+            }
+          ],
+          "title": "Likely Attack",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "ricoberger-cloudflare-datasource",
+            "uid": "cloudflare"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "yellow",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 5,
+            "w": 6,
+            "x": 12,
+            "y": 17
+          },
+          "id": 13,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "percentChangeColorMode": "standard",
+            "reduceOptions": {
+              "calcs": [
+                "sum"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "12.3.0",
+          "targets": [
+            {
+              "aggregation": "count",
+              "datasource": {
+                "type": "ricoberger-cloudflare-datasource",
+                "uid": "cloudflare"
+              },
+              "dimensions": [
+                "datetimeFiveMinutes"
+              ],
+              "filter": "{\n  requestSource: \"eyeball\"\n  wafAttackScore_geq: 51\n  wafAttackScore_leq: 80\n}",
+              "filterType": "code",
+              "filters": [
+                {
+                  "field": "-",
+                  "operator": "=",
+                  "value": ""
+                }
+              ],
+              "legend": "",
+              "limit": 1000,
+              "name": "httpRequests_visits",
+              "orderBy": [],
+              "refId": "A",
+              "zone": "${zone}"
+            }
+          ],
+          "title": "Likely Clean",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "ricoberger-cloudflare-datasource",
+            "uid": "cloudflare"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 5,
+            "w": 6,
+            "x": 18,
+            "y": 17
+          },
+          "id": 14,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "percentChangeColorMode": "standard",
+            "reduceOptions": {
+              "calcs": [
+                "sum"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "12.3.0",
+          "targets": [
+            {
+              "aggregation": "count",
+              "datasource": {
+                "type": "ricoberger-cloudflare-datasource",
+                "uid": "cloudflare"
+              },
+              "dimensions": [
+                "datetimeFiveMinutes"
+              ],
+              "filter": "{\n  requestSource: \"eyeball\"\n  wafAttackScore_geq: 81\n  wafAttackScore_leq: 99\n}",
+              "filterType": "code",
+              "filters": [
+                {
+                  "field": "-",
+                  "operator": "=",
+                  "value": ""
+                }
+              ],
+              "legend": "",
+              "limit": 1000,
+              "name": "httpRequests_visits",
+              "orderBy": [],
+              "refId": "A",
+              "zone": "${zone}"
+            }
+          ],
+          "title": "Clean",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "ricoberger-cloudflare-datasource",
+            "uid": "cloudflare"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "bars",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "showValues": false,
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "normal"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "orange",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Attack"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "purple",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Likely Attack"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "red",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Likely Clean"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "yellow",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Clean"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "green",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 10,
+            "w": 24,
+            "x": 0,
+            "y": 22
+          },
+          "id": 15,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.3.0",
+          "targets": [
+            {
+              "aggregation": "count",
+              "datasource": {
+                "type": "ricoberger-cloudflare-datasource",
+                "uid": "cloudflare"
+              },
+              "dimensions": [
+                "datetimeFiveMinutes"
+              ],
+              "filter": "{\n  requestSource: \"eyeball\"\n  wafAttackScore_geq: 1\n  wafAttackScore_leq: 20\n}",
+              "filterType": "code",
+              "filters": [
+                {
+                  "field": "-",
+                  "operator": "=",
+                  "value": ""
+                }
+              ],
+              "legend": "Attack",
+              "limit": 1000,
+              "name": "httpRequests_visits",
+              "orderBy": [],
+              "refId": "A",
+              "zone": "${zone}"
+            },
+            {
+              "aggregation": "count",
+              "datasource": {
+                "type": "ricoberger-cloudflare-datasource",
+                "uid": "cloudflare"
+              },
+              "dimensions": [
+                "datetimeFiveMinutes"
+              ],
+              "filter": "{\n  requestSource: \"eyeball\"\n  wafAttackScore_geq: 21\n  wafAttackScore_leq: 50\n}",
+              "filterType": "code",
+              "filters": [
+                {
+                  "field": "-",
+                  "operator": "=",
+                  "value": ""
+                }
+              ],
+              "hide": false,
+              "legend": "Likely Attack",
+              "limit": 1000,
+              "name": "httpRequests_visits",
+              "orderBy": [],
+              "queryType": "metrics",
+              "refId": "B",
+              "zone": "${zone}"
+            },
+            {
+              "aggregation": "count",
+              "datasource": {
+                "type": "ricoberger-cloudflare-datasource",
+                "uid": "cloudflare"
+              },
+              "dimensions": [
+                "datetimeFiveMinutes"
+              ],
+              "filter": "{\n  requestSource: \"eyeball\"\n  wafAttackScore_geq: 51\n  wafAttackScore_leq: 80\n}",
+              "filterType": "code",
+              "filters": [
+                {
+                  "field": "-",
+                  "operator": "=",
+                  "value": ""
+                }
+              ],
+              "hide": false,
+              "legend": "Likely Clean",
+              "limit": 1000,
+              "name": "httpRequests_visits",
+              "orderBy": [],
+              "queryType": "metrics",
+              "refId": "C",
+              "zone": "${zone}"
+            },
+            {
+              "aggregation": "count",
+              "datasource": {
+                "type": "ricoberger-cloudflare-datasource",
+                "uid": "cloudflare"
+              },
+              "dimensions": [
+                "datetimeFiveMinutes"
+              ],
+              "filter": "{\n  requestSource: \"eyeball\"\n  wafAttackScore_geq: 81\n  wafAttackScore_leq: 99\n}",
+              "filterType": "code",
+              "filters": [
+                {
+                  "field": "-",
+                  "operator": "=",
+                  "value": ""
+                }
+              ],
+              "hide": false,
+              "legend": "Clean",
+              "limit": 1000,
+              "name": "httpRequests_visits",
+              "orderBy": [],
+              "queryType": "metrics",
+              "refId": "D",
+              "zone": "${zone}"
+            }
+          ],
+          "title": "Attack",
+          "type": "timeseries"
+        }
+      ],
+      "title": "Attack Analysis",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 17
+      },
+      "id": 2,
+      "panels": [
+        {
+          "datasource": {
+            "type": "ricoberger-cloudflare-datasource",
+            "uid": "cloudflare"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "purple",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "likely_human"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "green",
+                      "mode": "fixed"
+                    }
+                  },
+                  {
+                    "id": "displayName",
+                    "value": "Likely Human"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "automated"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "yellow",
+                      "mode": "fixed"
+                    }
+                  },
+                  {
+                    "id": "displayName",
+                    "value": "Automated"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "likely_automated"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "red",
+                      "mode": "fixed"
+                    }
+                  },
+                  {
+                    "id": "displayName",
+                    "value": "Likely Automated"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "verified_bot"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "green",
+                      "mode": "fixed"
+                    }
+                  },
+                  {
+                    "id": "displayName",
+                    "value": "Verified Bot"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "other"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "mode": "fixed"
+                    }
+                  },
+                  {
+                    "id": "displayName",
+                    "value": "Other"
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 5,
+            "w": 24,
+            "x": 0,
+            "y": 33
+          },
+          "id": 17,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "percentChangeColorMode": "standard",
+            "reduceOptions": {
+              "calcs": [
+                "sum"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "12.3.0",
+          "targets": [
+            {
+              "aggregation": "count",
+              "datasource": {
+                "type": "ricoberger-cloudflare-datasource",
+                "uid": "cloudflare"
+              },
+              "dimensions": [
+                "botManagementDecision"
+              ],
+              "filter": "{\n  requestSource: \"eyeball\"\n}",
+              "filterType": "code",
+              "filters": [
+                {
+                  "field": "-",
+                  "operator": "=",
+                  "value": ""
+                }
+              ],
+              "legend": "{{botManagementDecision}}",
+              "limit": 1000,
+              "name": "httpRequests_visits",
+              "orderBy": [],
+              "refId": "A",
+              "zone": "${zone}"
+            }
+          ],
+          "title": "Bot",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "ricoberger-cloudflare-datasource",
+            "uid": "cloudflare"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "bars",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "showValues": false,
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "normal"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "purple",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "likely_human"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "green",
+                      "mode": "fixed"
+                    }
+                  },
+                  {
+                    "id": "displayName",
+                    "value": "Likely Human"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "automated"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "yellow",
+                      "mode": "fixed"
+                    }
+                  },
+                  {
+                    "id": "displayName",
+                    "value": "Automated"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "likely_automated"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "red",
+                      "mode": "fixed"
+                    }
+                  },
+                  {
+                    "id": "displayName",
+                    "value": "Likely Automated"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "verified_bot"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "green",
+                      "mode": "fixed"
+                    }
+                  },
+                  {
+                    "id": "displayName",
+                    "value": "Verified Bot"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "other"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "mode": "fixed"
+                    }
+                  },
+                  {
+                    "id": "displayName",
+                    "value": "Other"
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 10,
+            "w": 24,
+            "x": 0,
+            "y": 38
+          },
+          "id": 18,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.3.0",
+          "targets": [
+            {
+              "aggregation": "count",
+              "datasource": {
+                "type": "ricoberger-cloudflare-datasource",
+                "uid": "cloudflare"
+              },
+              "dimensions": [
+                "botManagementDecision",
+                "datetimeFiveMinutes"
+              ],
+              "filter": "{\n  requestSource: \"eyeball\"\n}",
+              "filterType": "code",
+              "filters": [
+                {
+                  "field": "-",
+                  "operator": "=",
+                  "value": ""
+                }
+              ],
+              "legend": "{{botManagementDecision}}",
+              "limit": 5000,
+              "name": "httpRequests_visits",
+              "orderBy": [],
+              "refId": "A",
+              "zone": "${zone}"
+            }
+          ],
+          "title": "Bot",
+          "type": "timeseries"
+        }
+      ],
+      "title": "Bot Analysis",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 18
+      },
+      "id": 1,
+      "panels": [
+        {
+          "datasource": {
+            "type": "ricoberger-cloudflare-datasource",
+            "uid": "cloudflare"
+          },
+          "fieldConfig": {
+            "defaults": {},
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 19,
+            "w": 24,
+            "x": 0,
+            "y": 49
+          },
+          "id": 5,
+          "options": {
+            "dedupStrategy": "none",
+            "enableInfiniteScrolling": false,
+            "enableLogDetails": true,
+            "showControls": false,
+            "showTime": true,
+            "sortOrder": "Descending",
+            "wrapLogMessage": false
+          },
+          "pluginVersion": "12.3.0",
+          "targets": [
+            {
+              "dimensions": [],
+              "filter": "",
+              "filterType": "builder",
+              "filters": [
+                {
+                  "field": "-",
+                  "operator": "=",
+                  "value": ""
+                }
+              ],
+              "legend": "",
+              "name": "firewallEvents",
+              "orderBy": [],
+              "refId": "A",
+              "zone": "${zone}"
+            }
+          ],
+          "title": "Firewall Events",
+          "type": "logs"
+        }
+      ],
+      "title": "Logs",
+      "type": "row"
+    }
+  ],
+  "preload": false,
+  "schemaVersion": 42,
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "text": "cloudflare.example.com",
+          "value": "xaJCc9gQbDP7pZCW3kegy8rtdkfySCtz"
+        },
+        "definition": "",
+        "description": "",
+        "label": "Zone",
+        "name": "zone",
+        "options": [],
+        "query": {
+          "queryType": "zones"
+        },
+        "refresh": 1,
+        "regex": "",
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-24h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Cloudflare Security",
+  "uid": "cloudflare-security",
+  "version": 2
+}
+
