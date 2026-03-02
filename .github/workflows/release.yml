@@ -27,6 +27,8 @@ jobs:
 
       - name: Build Plugin
         uses: grafana/plugin-actions/build-plugin@build-plugin/v1.2.0
+        env:
+          SKIP_OSV_SCANNER: 'true'
         with:
           go-version: '1.26.0'
           node-version: '22'
