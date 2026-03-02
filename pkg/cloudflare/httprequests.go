@@ -32,6 +32,7 @@ func (c *client) GetHTTPRequests(ctx context.Context, zoneId, filters string, li
 					orderBy: [datetime_DESC]
 				) {
 					datetime
+					botManagementDecision
 					cacheStatus
 					clientASNDescription
 					clientAsn
@@ -59,6 +60,7 @@ func (c *client) GetHTTPRequests(ctx context.Context, zoneId, filters string, li
 					originResponseStatus
 					rayName
 					requestSource
+					securityAction
 					upperTierColoName
 					userAgent
 					userAgentBrowser

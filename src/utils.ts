@@ -97,6 +97,7 @@ const filtersOptions: Record<string, string[]> = {
   ],
   httpRequests: [
     '-',
+    'botManagementDecision',
     'cacheStatus',
     'clientASNDescription',
     'clientAsn',
@@ -124,6 +125,7 @@ const filtersOptions: Record<string, string[]> = {
     'originResponseStatus',
     'rayName',
     'requestSource',
+    'securityAction',
     'upperTierColoName',
     'userAgent',
     'userAgentBrowser',
@@ -209,6 +211,7 @@ const dimensionsOptions: Record<string, string[]> = {
     'zoneVersion',
   ],
   httpRequests: [
+    'botManagementDecision',
     'cacheStatus',
     'clientASNDescription',
     'clientAsn',
@@ -241,6 +244,7 @@ const dimensionsOptions: Record<string, string[]> = {
     'originResponseDurationMs',
     'originResponseStatus',
     'requestSource',
+    'securityAction',
     'upperTierColoName',
     'userAgent',
     'userAgentBrowser',
