@@ -45,15 +45,19 @@
     ],
     "screenshots": [
       {
-        "name": "Example Bookinfo",
+        "name": "Cloudflare Dashboard - Overview",
         "path": "img/screenshots/dashboard-overview.png"
       },
       {
-        "name": "Example OTEL Demo",
+        "name": "Cloudflare Dashboard - Details",
         "path": "img/screenshots/dashboard-details.png"
       },
       {
-        "name": "Configuration",
+        "name": "Cloudflare Dashboard - Security",
+        "path": "img/screenshots/dashboard-security.png"
+      },
+      {
+        "name": "Explore",
         "path": "img/screenshots/explore.png"
       }
     ],

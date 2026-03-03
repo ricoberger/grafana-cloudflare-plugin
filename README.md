@@ -3,12 +3,14 @@
 The Grafana Cloudflare Plugin allows you to explore your Cloudflare metrics
 within Grafana.
 
-![Dashboard Overview](https://raw.githubusercontent.com/ricoberger/grafana-cloudflare-plugin/refs/heads/main/src/img/screenshots/dashboard-overview.png)
-
 <div align="center">
   <table>
     <tr>
+      <td><img src="https://raw.githubusercontent.com/ricoberger/grafana-cloudflare-plugin/refs/heads/main/src/img/screenshots/dashboard-overview.png" /></td>
       <td><img src="https://raw.githubusercontent.com/ricoberger/grafana-cloudflare-plugin/refs/heads/main/src/img/screenshots/dashboard-details.png" /></td>
+    </tr>
+    <tr>
+      <td><img src="https://raw.githubusercontent.com/ricoberger/grafana-cloudflare-plugin/refs/heads/main/src/img/screenshots/dashboard-security.png" /></td>
       <td><img src="https://raw.githubusercontent.com/ricoberger/grafana-cloudflare-plugin/refs/heads/main/src/img/screenshots/explore.png" /></td>
     </tr>
   </table>
