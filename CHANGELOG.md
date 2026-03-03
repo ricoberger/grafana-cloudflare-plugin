@@ -1,5 +1,18 @@
 # Changelog
 
+## [v0.2.0](https://github.com/ricoberger/grafana-cloudflare-plugin/tree/v0.2.0) (2026-03-03)
+
+[Full Changelog](https://github.com/ricoberger/grafana-cloudflare-plugin/compare/v0.1.0...v0.2.0)
+
+- Revert Dependabot Updates [\#37](https://github.com/ricoberger/grafana-cloudflare-plugin/pull/37) ([ricoberger](https://github.com/ricoberger))
+- Add Cloudflare Security Dashboard [\#36](https://github.com/ricoberger/grafana-cloudflare-plugin/pull/36) ([ricoberger](https://github.com/ricoberger))
+- Add `botManagementDecision` and`securityAction` [\#35](https://github.com/ricoberger/grafana-cloudflare-plugin/pull/35) ([ricoberger](https://github.com/ricoberger))
+- chore: bump @grafana/create-plugin configuration to 7.0.0 [\#29](https://github.com/ricoberger/grafana-cloudflare-plugin/pull/29) ([ricoberger](https://github.com/ricoberger))
+- Add `AGENTS.md` File and Skills [\#28](https://github.com/ricoberger/grafana-cloudflare-plugin/pull/28) ([ricoberger](https://github.com/ricoberger))
+- Return Error if Authentication Method is Not Set [\#27](https://github.com/ricoberger/grafana-cloudflare-plugin/pull/27) ([ricoberger](https://github.com/ricoberger))
+- Add Dependabot Configuration for npm [\#19](https://github.com/ricoberger/grafana-cloudflare-plugin/pull/19) ([ricoberger](https://github.com/ricoberger))
+- Add Support for Firewall Events [\#18](https://github.com/ricoberger/grafana-cloudflare-plugin/pull/18) ([ricoberger](https://github.com/ricoberger))
+
 ## [v0.1.0](https://github.com/ricoberger/grafana-cloudflare-plugin/tree/v0.1.0) (2026-02-25)
 
 [Full Changelog](https://github.com/ricoberger/grafana-cloudflare-plugin/compare/408afeeb767ccc637b5859333ea730f677777014...v0.1.0)
