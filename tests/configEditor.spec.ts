@@ -1,4 +1,4 @@
-import { test, expect } from '@grafana/plugin-e2e';
+import { expect, test } from '@grafana/plugin-e2e';
 
 test('smoke: should render config editor', async ({
   createDataSourceConfigPage,

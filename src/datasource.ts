@@ -1,21 +1,21 @@
 import {
-  DataFrame,
-  DataSourceInstanceSettings,
   CoreApp,
-  ScopedVars,
+  DataFrame,
   DataQueryRequest,
   DataQueryResponse,
+  DataSourceInstanceSettings,
+  DataSourceWithSupplementaryQueriesSupport,
   LegacyMetricFindQueryOptions,
   MetricFindValue,
-  SupplementaryQueryType,
+  ScopedVars,
   SupplementaryQueryOptions,
-  DataSourceWithSupplementaryQueriesSupport,
+  SupplementaryQueryType,
 } from '@grafana/data';
 import { DataSourceWithBackend, getTemplateSrv } from '@grafana/runtime';
-import { lastValueFrom, Observable } from 'rxjs';
 import { cloneDeep } from 'lodash';
+import { lastValueFrom, Observable } from 'rxjs';
 
-import { Query, Options, DEFAULT_QUERY } from './types';
+import { DEFAULT_QUERY, Options, Query } from './types';
 import { VariableSupport } from './variablesupport';
 
 export class DataSource

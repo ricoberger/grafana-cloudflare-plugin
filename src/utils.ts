@@ -19,9 +19,9 @@ export const nameOptions: string[] = [
   'firewallEvents_events',
 ];
 
-export const getAggregationOptions = (
+export function getAggregationOptions(
   name: string,
-): QueryModelMetricsAggregation[] | undefined => {
+): QueryModelMetricsAggregation[] | undefined {
   if (
     [
       'httpRequests_overview_bytes',
@@ -64,9 +64,9 @@ export const getAggregationOptions = (
   }
 
   return undefined;
-};
+}
 
-export const getFiltersOptions = (name: string): string[] => {
+export function getFiltersOptions(name: string): string[] {
   if (name.startsWith('httpRequests_overview_')) {
     return filtersOptions['httpRequestsOverview'];
   }
@@ -80,7 +80,7 @@ export const getFiltersOptions = (name: string): string[] => {
   }
 
   return [];
-};
+}
 
 const filtersOptions: Record<string, string[]> = {
   httpRequestsOverview: [
@@ -301,11 +301,11 @@ const dimensionsOptions: Record<string, string[]> = {
   ],
 };
 
-export const getOrderByOptions = (
+export function getOrderByOptions(
   name: string,
   aggregation: QueryModelMetricsAggregation,
   dimensions: string[],
-): string[] => {
+): string[] {
   const options = [];
 
   const metricName = name.split('_')[name.split('_').length - 1];
@@ -326,4 +326,4 @@ export const getOrderByOptions = (
   }
 
   return options;
-};
+}
