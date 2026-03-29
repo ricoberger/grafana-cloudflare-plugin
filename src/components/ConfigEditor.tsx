@@ -1,4 +1,8 @@
-import React, { ChangeEvent } from 'react';
+import { css } from '@emotion/css';
+import {
+  DataSourcePluginOptionsEditorProps,
+  GrafanaTheme2,
+} from '@grafana/data';
 import {
   FieldSet,
   IconButton,
@@ -9,11 +13,7 @@ import {
   SecretInput,
   useStyles2,
 } from '@grafana/ui';
-import {
-  DataSourcePluginOptionsEditorProps,
-  GrafanaTheme2,
-} from '@grafana/data';
-import { css } from '@emotion/css';
+import React, { ChangeEvent } from 'react';
 
 import { Options, OptionsAuthMethod, OptionsSecure } from '../types';
 

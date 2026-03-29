@@ -1,5 +1,5 @@
-import React from 'react';
 import { Combobox, ComboboxOption, Field } from '@grafana/ui';
+import React from 'react';
 import { useAsync } from 'react-use';
 
 import { DataSource } from '../datasource';

@@ -1,19 +1,19 @@
-import React, { ChangeEvent, useMemo } from 'react';
+import { css } from '@emotion/css';
+import { GrafanaTheme2, QueryEditorProps } from '@grafana/data';
 import {
+  Box,
   Combobox,
   ComboboxOption,
   Field,
-  Input,
-  Box,
-  useStyles2,
   IconButton,
-  Stack,
+  Input,
   MultiCombobox,
   RadioButtonGroup,
+  Stack,
   TextArea,
+  useStyles2,
 } from '@grafana/ui';
-import { GrafanaTheme2, QueryEditorProps } from '@grafana/data';
-import { css } from '@emotion/css';
+import React, { ChangeEvent, useMemo } from 'react';
 
 import { DataSource } from '../datasource';
 import {
