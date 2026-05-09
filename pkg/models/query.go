@@ -3,10 +3,19 @@ package models
 type QueryType string
 
 const (
-	QueryTypeZones      = "zones"
-	QueryTypeMetrics    = "metrics"
-	QueryTypeLogsvolume = "logsvolume"
+	QueryTypeZones        = "zones"
+	QueryTypeFilterValues = "filtervalues"
+	QueryTypeMetrics      = "metrics"
+	QueryTypeLogsvolume   = "logsvolume"
 )
+
+type QueryModelFilterValues struct {
+	Name        string `json:"name"`
+	Aggregation string `json:"aggregation"`
+	Zone        string `json:"zone"`
+	Field       string `json:"field"`
+	Limit       int64  `json:"limit"`
+}
 
 type QueryModelMetrics struct {
 	Name        string                    `json:"name"`

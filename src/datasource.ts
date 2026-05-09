@@ -31,11 +31,18 @@ export class DataSource
   }
 
   applyTemplateVariables(query: Query, scopedVars: ScopedVars) {
+    const filters = query.filters?.map((filter) => ({
+      field: filter.field,
+      operator: filter.operator,
+      value: getTemplateSrv().replace(filter.value, scopedVars),
+    }));
+
     return {
       ...query,
       queryType: query.queryType || DEFAULT_QUERY.queryType,
       zone: getTemplateSrv().replace(query.zone, scopedVars),
       filter: getTemplateSrv().replace(query.filter, scopedVars),
+      filters: filters,
     };
   }
 
@@ -68,6 +75,17 @@ export class DataSource
       return [];
     }
 
+    if (query.queryType === 'filtervalues') {
+      return response
+        ? response.data.map((data) => {
+          return {
+            text: data.name,
+            value: data.name,
+          };
+        })
+        : [];
+    }
+
     return response
       ? (response.data[0] as DataFrame).fields[0].values.map((_, index) => {
         const name = (response.data[0] as DataFrame).fields[1].values[
@@ -83,6 +101,13 @@ export class DataSource
   }
 
   filterQuery(query: Query): boolean {
+    if (
+      query.queryType === 'filtervalues' &&
+      (!query.zone || !query.name || !query.field)
+    ) {
+      return false;
+    }
+
     if (query.queryType === 'metrics' && (!query.zone || !query.name)) {
       return false;
     }

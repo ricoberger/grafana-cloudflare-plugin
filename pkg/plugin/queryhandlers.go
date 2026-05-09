@@ -69,6 +69,52 @@ func (d *Datasource) handleZones(ctx context.Context, query concurrent.Query) ba
 	return response
 }
 
+func (d *Datasource) handleFilterValuesQueries(ctx context.Context, req *backend.QueryDataRequest) (*backend.QueryDataResponse, error) {
+	ctx, span := tracing.DefaultTracer().Start(ctx, "handleFilterValuesQueries")
+	defer span.End()
+
+	return concurrent.QueryData(ctx, req, d.handleFilterValues, 10)
+}
+
+func (d *Datasource) handleFilterValues(ctx context.Context, query concurrent.Query) backend.DataResponse {
+	ctx, span := tracing.DefaultTracer().Start(ctx, "handleFilterValues")
+	defer span.End()
+
+	var qm models.QueryModelFilterValues
+	err := json.Unmarshal(query.DataQuery.JSON, &qm)
+	if err != nil {
+		d.logger.Error("Failed to unmarshal query model", "error", err.Error())
+		span.RecordError(err)
+		span.SetStatus(codes.Error, err.Error())
+		return backend.ErrorResponseWithErrorSource(err)
+	}
+
+	filters := cloudflare.FiltersToGraphQL(query.DataQuery.TimeRange.From.Format(time.RFC3339), query.DataQuery.TimeRange.To.Format(time.RFC3339), "", nil, "")
+	dimensions := cloudflare.DimensionsToGraphQL([]string{qm.Field})
+	if qm.Limit == 0 {
+		qm.Limit = 100
+	}
+
+	d.logger.Info("handleFilterValues query", "name", qm.Name, "zone", qm.Zone, "field", qm.Field, "limit", qm.Limit)
+	span.SetAttributes(attribute.Key("name").String(qm.Name))
+	span.SetAttributes(attribute.Key("zone").String(qm.Zone))
+	span.SetAttributes(attribute.Key("field").String(qm.Field))
+	span.SetAttributes(attribute.Key("limit").Int64(qm.Limit))
+
+	switch {
+	case strings.HasPrefix(qm.Name, "httpRequests_"):
+		return d.cloudflareClient.GetHTTPRequestsAggregate(ctx, qm.Zone, qm.Name, qm.Aggregation, filters, dimensions, "", fmt.Sprintf("{{%s}}", qm.Field), qm.Limit, query.DataQuery.TimeRange.To)
+	case strings.HasPrefix(qm.Name, "firewallEvents_"):
+		return d.cloudflareClient.GetFirewallEventsAggregate(ctx, qm.Zone, filters, dimensions, "", fmt.Sprintf("{{%s}}", qm.Field), qm.Limit, query.DataQuery.TimeRange.To)
+	default:
+		err := fmt.Errorf("unsupported metric name: %s", qm.Name)
+		d.logger.Error("Failed to unmarshal query model", "error", err.Error())
+		span.RecordError(err)
+		span.SetStatus(codes.Error, err.Error())
+		return backend.ErrorResponseWithErrorSource(err)
+	}
+}
+
 func (d *Datasource) handleMetricsQueries(ctx context.Context, req *backend.QueryDataRequest) (*backend.QueryDataResponse, error) {
 	ctx, span := tracing.DefaultTracer().Start(ctx, "handleMetricsQueries")
 	defer span.End()
