@@ -1,5 +1,13 @@
 # Changelog
 
+## [v0.3.0](https://github.com/ricoberger/grafana-cloudflare-plugin/tree/v0.3.0) (2026-05-09)
+
+[Full Changelog](https://github.com/ricoberger/grafana-cloudflare-plugin/compare/v0.2.0...v0.3.0)
+
+- feat\(variables\): add new filter values variable type [\#56](https://github.com/ricoberger/grafana-cloudflare-plugin/pull/56) ([ricoberger](https://github.com/ricoberger))
+- test\(e2e\): remove e2e tests [\#50](https://github.com/ricoberger/grafana-cloudflare-plugin/pull/50) ([ricoberger](https://github.com/ricoberger))
+- style: use regular functions and organize imports [\#43](https://github.com/ricoberger/grafana-cloudflare-plugin/pull/43) ([ricoberger](https://github.com/ricoberger))
+
 ## [v0.2.0](https://github.com/ricoberger/grafana-cloudflare-plugin/tree/v0.2.0) (2026-03-03)
 
 [Full Changelog](https://github.com/ricoberger/grafana-cloudflare-plugin/compare/v0.1.0...v0.2.0)
