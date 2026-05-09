@@ -3,6 +3,13 @@ import { DataQuery } from '@grafana/schema';
 
 export const DEFAULT_QUERIES: Record<QueryType, Partial<Query>> = {
   zones: {},
+  filtervalues: {
+    name: 'httpRequests_visits',
+    aggregation: 'sum',
+    zone: '',
+    field: '',
+    limit: 100,
+  },
   metrics: {
     name: 'httpRequests',
     aggregation: undefined,
@@ -30,13 +37,25 @@ export const DEFAULT_QUERY: Partial<Query> = {
   limit: 100,
 };
 
-export type QueryType = 'zones' | 'metrics' | 'logsvolume';
+export type QueryType = 'zones' | 'filtervalues' | 'metrics' | 'logsvolume';
 
-export interface Query extends DataQuery, QueryModelZones, QueryModelMetrics {
+export interface Query
+  extends DataQuery,
+  QueryModelZones,
+  QueryModelFilterValues,
+  QueryModelMetrics {
   queryType: QueryType;
 }
 
 interface QueryModelZones { }
+
+interface QueryModelFilterValues {
+  name?: string;
+  aggregation?: QueryModelMetricsAggregation;
+  zone?: string;
+  field?: string;
+  limit?: number;
+}
 
 interface QueryModelMetrics {
   name?: string;

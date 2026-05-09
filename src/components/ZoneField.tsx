@@ -1,4 +1,4 @@
-import { Combobox, ComboboxOption, Field } from '@grafana/ui';
+import { Combobox, ComboboxOption, Field, InlineField } from '@grafana/ui';
 import React from 'react';
 import { useAsync } from 'react-use';
 
@@ -8,9 +8,10 @@ interface Props {
   datasource: DataSource;
   zone?: string;
   onZoneChange: (value: string) => void;
+  isInline?: boolean;
 }
 
-export function ZoneField({ datasource, zone, onZoneChange }: Props) {
+export function ZoneField({ datasource, zone, onZoneChange, isInline }: Props) {
   const state = useAsync(async (): Promise<ComboboxOption[]> => {
     const result = await datasource.metricFindQuery({
       refId: 'zones',
@@ -22,6 +23,22 @@ export function ZoneField({ datasource, zone, onZoneChange }: Props) {
     });
     return zones;
   }, [datasource]);
+
+  if (isInline) {
+    return (
+      <InlineField label="Zone" labelWidth={25}>
+        <Combobox<string>
+          width={25}
+          value={zone}
+          createCustomValue={true}
+          options={state.value || []}
+          onChange={(option: ComboboxOption<string>) => {
+            onZoneChange(option.value);
+          }}
+        />
+      </InlineField>
+    );
+  }
 
   return (
     <Field label="Zone">
