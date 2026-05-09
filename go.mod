@@ -1,6 +1,6 @@
 module github.com/ricoberger/grafana-cloudflare-plugin
 
-go 1.26.0
+go 1.26.2
 
 require (
 	github.com/cloudflare/cloudflare-go/v6 v6.10.0
