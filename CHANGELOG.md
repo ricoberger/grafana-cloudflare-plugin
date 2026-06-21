@@ -1,5 +1,11 @@
 # Changelog
 
+## [v0.3.1](https://github.com/ricoberger/grafana-cloudflare-plugin/tree/v0.3.1) (2026-06-21)
+
+[Full Changelog](https://github.com/ricoberger/grafana-cloudflare-plugin/compare/v0.3.0...v0.3.1)
+
+- chore: bump @grafana/create-plugin configuration to 7.7.0 [\#59](https://github.com/ricoberger/grafana-cloudflare-plugin/pull/59) ([ricoberger](https://github.com/ricoberger))
+
 ## [v0.3.0](https://github.com/ricoberger/grafana-cloudflare-plugin/tree/v0.3.0) (2026-05-09)
 
 [Full Changelog](https://github.com/ricoberger/grafana-cloudflare-plugin/compare/v0.2.0...v0.3.0)
