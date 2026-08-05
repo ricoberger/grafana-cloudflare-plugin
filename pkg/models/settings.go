@@ -11,6 +11,7 @@ type PluginSettings struct {
 	AuthMethod string                `json:"authMethod"`
 	ApiEmail   string                `json:"apiEmail"`
 	Zones      [][]string            `json:"zones"`
+	Account    string                `json:"account"`
 	Secrets    *SecretPluginSettings `json:"-"`
 }
 

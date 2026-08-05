@@ -20,14 +20,26 @@ within Grafana.
 
 - Explore your Cloudflare metrics via the
   [Cloudflare GraphQL Analytics API](https://developers.cloudflare.com/analytics/graphql-api/)
+- Explore your Workers logs via the
+  [Cloudflare Workers Observability API](https://developers.cloudflare.com/api/resources/workers/subresources/observability/)
 - Support for multiple zones, which are fetched automatically or can be
   specified manually
+- Support for a single account, which can be configured in the data source
+  settings and is used for the Workers metrics and logs
 - Supports the following Cloudflare metrics:
   - Raw HTTP requests with adaptive sampling
   - Aggregated HTTP requests data with adaptive sampling
   - High-level summary of HTTP requests made by end users
   - Raw Firewall events with adaptive sampling
   - Aggregated Firewall events with adaptive sampling
+  - Aggregated Workers invocations with adaptive sampling (requests, errors,
+    subrequests, client disconnects, CPU time, wall time, duration, request
+    duration and response body size, including P50 - P999 quantiles)
+  - Workers logs via
+    [Workers Logs](https://developers.cloudflare.com/workers/observability/logs/workers-logs/)
+    (requires the
+    [observability setting](https://developers.cloudflare.com/workers/observability/logs/workers-logs/#enable-workers-logs)
+    to be enabled for a Worker)
 - Raw events are visualized as
   [logs](https://grafana.com/docs/grafana/latest/visualizations/explore/logs-integration/)
 - Aggregated data supports instant and range queries, when a `date*` dimension
@@ -61,6 +73,19 @@ preinstall_sync = ricoberger-cloudflare-datasource@0.1.0@https://github.com/rico
 export GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS=ricoberger-cloudflare-datasource
 export GF_PLUGINS_PREINSTALL_SYNC=ricoberger-cloudflare-datasource@0.1.0@https://github.com/ricoberger/grafana-cloudflare-plugin/releases/download/v0.1.0/ricoberger-cloudflare-datasource-0.1.0.zip
 ```
+
+## Token Permissions
+
+The API token requires the following permissions:
+
+- **Zone / Zone / Read**: To fetch the list of zones
+- **Zone / Analytics / Read**: To query HTTP requests and Firewall events
+- **Account / Account Analytics / Read**: To query Workers invocations
+- **Account / Workers Observability / Read**: To query Workers logs
+
+The account-scoped permissions are only required when the Workers metrics and
+logs are used. To use them, the account ID must be set in the data source
+settings.
 
 ## Contributing
 

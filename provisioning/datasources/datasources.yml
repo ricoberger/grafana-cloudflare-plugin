@@ -11,9 +11,10 @@ datasources:
     editable: true
     jsonData:
       # Must be "apiToken" or "apiKey"
-      authMethod: apiKey
+      authMethod: apiToken
       apiEmail: ${CF_API_EMAIL}
       zones:
+      account: ${CF_ACCOUNT_ID}
     secureJsonData:
       apiKey: ${CF_API_KEY}
       apiToken: ${CF_API_TOKEN}

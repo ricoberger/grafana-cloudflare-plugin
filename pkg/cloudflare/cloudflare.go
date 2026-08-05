@@ -6,6 +6,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/ricoberger/grafana-cloudflare-plugin/pkg/models"
+
 	cloudflare "github.com/cloudflare/cloudflare-go/v6"
 	"github.com/cloudflare/cloudflare-go/v6/option"
 	"github.com/cloudflare/cloudflare-go/v6/zones"
@@ -21,6 +23,10 @@ type Client interface {
 	GetFirewallEvents(ctx context.Context, zoneId, filters string, limit int64) backend.DataResponse
 	GetFirewallEventsVolumes(ctx context.Context, zoneId, filtersInfo, filtersWarning, filtersError, filtersCritical string) backend.DataResponse
 	GetFirewallEventsAggregate(ctx context.Context, zoneId, filters, dimensions, orderBy, legend string, limit int64, timeTo time.Time) backend.DataResponse
+	GetWorkersInvocationsAggregate(ctx context.Context, accountId, metricName, aggregation, filters, dimensions, orderBy, legend string, limit int64, timeTo time.Time) backend.DataResponse
+	GetWorkersLogs(ctx context.Context, accountId string, filters []models.QueryModelMetricsFilter, timeFrom, timeTo time.Time, limit int64) backend.DataResponse
+	GetWorkersLogsVolumes(ctx context.Context, accountId string, filters []models.QueryModelMetricsFilter, timeFrom, timeTo time.Time) backend.DataResponse
+	GetWorkersLogsValues(ctx context.Context, accountId, field string, timeFrom, timeTo time.Time, limit int64) backend.DataResponse
 }
 
 type client struct {

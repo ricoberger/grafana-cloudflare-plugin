@@ -13,6 +13,7 @@ import { DEFAULT_QUERIES, Options, Query, QueryType } from '../types';
 import {
   getAggregationOptions,
   getFiltersOptions,
+  isAccountScopedMetric,
   nameOptions,
 } from '../utils';
 import { ZoneField } from './ZoneField';
@@ -56,18 +57,6 @@ export function VariableQueryEditor({
       {query.queryType === 'filtervalues' && (
         <>
           <InlineFieldRow>
-            <ZoneField
-              isInline={true}
-              datasource={datasource}
-              zone={query.zone}
-              onZoneChange={(value) => {
-                onChange({ ...query, zone: value });
-                onRunQuery();
-              }}
-            />
-          </InlineFieldRow>
-
-          <InlineFieldRow>
             <InlineField data-testid="metric" label="Metric" labelWidth={25}>
               <Combobox<string>
                 width={25}
@@ -99,12 +88,34 @@ export function VariableQueryEditor({
             </InlineField>
           </InlineFieldRow>
 
+          {/* The account for the account scoped Workers metrics and logs is
+              configured in the data source settings, so that the zone field
+              is hidden for these metrics. */}
+          {!isAccountScopedMetric(query.name || '') && (
+            <InlineFieldRow>
+              <ZoneField
+                isInline={true}
+                datasource={datasource}
+                zone={query.zone}
+                onZoneChange={(value) => {
+                  onChange({ ...query, zone: value });
+                  onRunQuery();
+                }}
+              />
+            </InlineFieldRow>
+          )}
+
           <InlineFieldRow>
             <InlineField data-testid="field" label="Field" labelWidth={25}>
               <Combobox<string>
                 width={25}
                 placeholder="Field"
                 value={query.field}
+                // Custom values are allowed for the workersLogs metric,
+                // because the list of fields is not exhaustive and any key of
+                // an event can be used (e.g.
+                // "$workers.event.request.cf.country").
+                createCustomValue={query.name === 'workersLogs'}
                 options={getFiltersOptions(query.name!).map((field) => ({
                   value: field,
                 }))}

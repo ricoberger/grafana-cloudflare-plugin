@@ -16,6 +16,7 @@ import { cloneDeep } from 'lodash';
 import { lastValueFrom, Observable } from 'rxjs';
 
 import { DEFAULT_QUERY, Options, Query } from './types';
+import { isAccountScopedMetric } from './utils';
 import { VariableSupport } from './variablesupport';
 
 export class DataSource
@@ -103,12 +104,17 @@ export class DataSource
   filterQuery(query: Query): boolean {
     if (
       query.queryType === 'filtervalues' &&
-      (!query.zone || !query.name || !query.field)
+      (!query.name ||
+        !query.field ||
+        (!isAccountScopedMetric(query.name) && !query.zone))
     ) {
       return false;
     }
 
-    if (query.queryType === 'metrics' && (!query.zone || !query.name)) {
+    if (
+      query.queryType === 'metrics' &&
+      (!query.name || (!isAccountScopedMetric(query.name) && !query.zone))
+    ) {
       return false;
     }
 
@@ -134,7 +140,9 @@ export class DataSource
       .map((query) => this.getSupplementaryQuery(logsVolumeOption, query))
       .filter(
         (query): query is Query =>
-          query?.name === 'httpRequests' || query?.name === 'firewallEvents',
+          query?.name === 'httpRequests' ||
+          query?.name === 'firewallEvents' ||
+          query?.name === 'workersLogs',
       );
 
     if (!targets.length) {

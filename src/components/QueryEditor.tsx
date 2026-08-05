@@ -28,6 +28,7 @@ import {
   getDimensionsOptions,
   getFiltersOptions,
   getOrderByOptions,
+  isAccountScopedMetric,
   nameOptions,
 } from '../utils';
 import { ZoneField } from './ZoneField';
@@ -100,7 +101,10 @@ export function QueryEditor({
           </Field>
         )}
 
-        {query.name && (
+        {/* The account for the account scoped Workers metrics and logs is
+            configured in the data source settings, so that the zone field is
+            hidden for these metrics. */}
+        {query.name && !isAccountScopedMetric(query.name) && (
           <ZoneField
             datasource={datasource}
             zone={query.zone}
@@ -114,23 +118,27 @@ export function QueryEditor({
         {query.name && (
           <Field label="Filters">
             <Box display="flex" direction="column" grow={0} gap={1}>
-              <RadioButtonGroup<QueryModelMetricsFilterType>
-                fullWidth={true}
-                options={[
-                  { label: 'Builder', value: 'builder' },
-                  { label: 'Code', value: 'code' },
-                ]}
-                value={query.filterType}
-                onChange={(value: QueryModelMetricsFilterType) => {
-                  onChange({
-                    ...query,
-                    filterType: value,
-                    filter: '',
-                    filters: [{ field: '-', operator: '=', value: '' }],
-                  });
-                }}
-              />
-
+              {/* The Workers Observability API only supports the filters from
+                  the builder, so that the option to provide a filter as code
+                  is hidden for the workersLogs metric. */}
+              {query.name !== 'workersLogs' && (
+                <RadioButtonGroup<QueryModelMetricsFilterType>
+                  fullWidth={true}
+                  options={[
+                    { label: 'Builder', value: 'builder' },
+                    { label: 'Code', value: 'code' },
+                  ]}
+                  value={query.filterType}
+                  onChange={(value: QueryModelMetricsFilterType) => {
+                    onChange({
+                      ...query,
+                      filterType: value,
+                      filter: '',
+                      filters: [{ field: '-', operator: '=', value: '' }],
+                    });
+                  }}
+                />
+              )}
               {query.filterType === 'code' && (
                 <div style={{ width: '524px' }}>
                   <TextArea
@@ -164,6 +172,11 @@ export function QueryEditor({
                       width={25}
                       placeholder="Field"
                       value={filter.field}
+                      // Custom values are allowed for the workersLogs metric,
+                      // because the list of fields is not exhaustive and any
+                      // key of an event can be used in a filter (e.g.
+                      // "$workers.event.request.cf.country").
+                      createCustomValue={query.name === 'workersLogs'}
                       options={getFiltersOptions(query.name!).map((field) => ({
                         value: field,
                       }))}
@@ -240,7 +253,8 @@ export function QueryEditor({
 
         {query.name &&
           (query.name.startsWith('httpRequests_') ||
-            query.name.startsWith('firewallEvents_')) && (
+            query.name.startsWith('firewallEvents_') ||
+            query.name.startsWith('workersInvocations_')) && (
             <Field label="Dimensions">
               <MultiCombobox<string>
                 width={25}
