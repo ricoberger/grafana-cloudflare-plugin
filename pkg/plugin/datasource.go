@@ -45,6 +45,7 @@ func NewDatasource(_ context.Context, pCtx backend.DataSourceInstanceSettings) (
 
 	ds := &Datasource{
 		zones:            settings.Zones,
+		account:          settings.Account,
 		cloudflareClient: cloudflareClient,
 		logger:           logger,
 	}
@@ -63,6 +64,7 @@ func NewDatasource(_ context.Context, pCtx backend.DataSourceInstanceSettings) (
 // reports its health and has streaming skills.
 type Datasource struct {
 	zones            [][]string
+	account          string
 	queryHandler     backend.QueryDataHandler
 	cloudflareClient cloudflare.Client
 	logger           log.Logger

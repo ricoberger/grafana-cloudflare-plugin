@@ -16,7 +16,16 @@ import (
 	"github.com/grafana/grafana-plugin-sdk-go/experimental/concurrent"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
+	"go.opentelemetry.io/otel/trace"
 )
+
+func (d *Datasource) accountNotConfigured(span trace.Span) backend.DataResponse {
+	err := fmt.Errorf("account is not configured, please set the account id in the data source settings")
+	d.logger.Error("Failed to handle query", "error", err.Error())
+	span.RecordError(err)
+	span.SetStatus(codes.Error, err.Error())
+	return backend.ErrorResponseWithErrorSource(err)
+}
 
 func (d *Datasource) handleZonesQueries(ctx context.Context, req *backend.QueryDataRequest) (*backend.QueryDataResponse, error) {
 	ctx, span := tracing.DefaultTracer().Start(ctx, "handleZonesQueries")
@@ -95,9 +104,10 @@ func (d *Datasource) handleFilterValues(ctx context.Context, query concurrent.Qu
 		qm.Limit = 100
 	}
 
-	d.logger.Info("handleFilterValues query", "name", qm.Name, "zone", qm.Zone, "field", qm.Field, "limit", qm.Limit)
+	d.logger.Info("handleFilterValues query", "name", qm.Name, "zone", qm.Zone, "account", d.account, "field", qm.Field, "limit", qm.Limit)
 	span.SetAttributes(attribute.Key("name").String(qm.Name))
 	span.SetAttributes(attribute.Key("zone").String(qm.Zone))
+	span.SetAttributes(attribute.Key("account").String(d.account))
 	span.SetAttributes(attribute.Key("field").String(qm.Field))
 	span.SetAttributes(attribute.Key("limit").Int64(qm.Limit))
 
@@ -106,6 +116,16 @@ func (d *Datasource) handleFilterValues(ctx context.Context, query concurrent.Qu
 		return d.cloudflareClient.GetHTTPRequestsAggregate(ctx, qm.Zone, qm.Name, qm.Aggregation, filters, dimensions, "", fmt.Sprintf("{{%s}}", qm.Field), qm.Limit, query.DataQuery.TimeRange.To)
 	case strings.HasPrefix(qm.Name, "firewallEvents_"):
 		return d.cloudflareClient.GetFirewallEventsAggregate(ctx, qm.Zone, filters, dimensions, "", fmt.Sprintf("{{%s}}", qm.Field), qm.Limit, query.DataQuery.TimeRange.To)
+	case strings.HasPrefix(qm.Name, "workersInvocations_"):
+		if d.account == "" {
+			return d.accountNotConfigured(span)
+		}
+		return d.cloudflareClient.GetWorkersInvocationsAggregate(ctx, d.account, qm.Name, qm.Aggregation, filters, dimensions, "", fmt.Sprintf("{{%s}}", qm.Field), qm.Limit, query.DataQuery.TimeRange.To)
+	case qm.Name == "workersLogs":
+		if d.account == "" {
+			return d.accountNotConfigured(span)
+		}
+		return d.cloudflareClient.GetWorkersLogsValues(ctx, d.account, qm.Field, query.DataQuery.TimeRange.From, query.DataQuery.TimeRange.To, qm.Limit)
 	default:
 		err := fmt.Errorf("unsupported metric name: %s", qm.Name)
 		d.logger.Error("Failed to unmarshal query model", "error", err.Error())
@@ -142,9 +162,10 @@ func (d *Datasource) handleMetrics(ctx context.Context, query concurrent.Query) 
 		qm.Limit = 100
 	}
 
-	d.logger.Info("handleMetrics query", "name", qm.Name, "zone", qm.Zone, "filters", filters, "dimensions", dimensions, "orderBy", orderBy, "limit", qm.Limit)
+	d.logger.Info("handleMetrics query", "name", qm.Name, "zone", qm.Zone, "account", d.account, "filters", filters, "dimensions", dimensions, "orderBy", orderBy, "limit", qm.Limit)
 	span.SetAttributes(attribute.Key("name").String(qm.Name))
 	span.SetAttributes(attribute.Key("zone").String(qm.Zone))
+	span.SetAttributes(attribute.Key("account").String(d.account))
 	span.SetAttributes(attribute.Key("filters").String(filters))
 	span.SetAttributes(attribute.Key("dimensions").String(dimensions))
 	span.SetAttributes(attribute.Key("orderBy").String(orderBy))
@@ -159,6 +180,16 @@ func (d *Datasource) handleMetrics(ctx context.Context, query concurrent.Query) 
 		return d.cloudflareClient.GetFirewallEvents(ctx, qm.Zone, filters, qm.Limit)
 	case strings.HasPrefix(qm.Name, "firewallEvents_"):
 		return d.cloudflareClient.GetFirewallEventsAggregate(ctx, qm.Zone, filters, dimensions, orderBy, qm.Legend, qm.Limit, query.DataQuery.TimeRange.To)
+	case qm.Name == "workersLogs":
+		if d.account == "" {
+			return d.accountNotConfigured(span)
+		}
+		return d.cloudflareClient.GetWorkersLogs(ctx, d.account, qm.Filters, query.DataQuery.TimeRange.From, query.DataQuery.TimeRange.To, qm.Limit)
+	case strings.HasPrefix(qm.Name, "workersInvocations_"):
+		if d.account == "" {
+			return d.accountNotConfigured(span)
+		}
+		return d.cloudflareClient.GetWorkersInvocationsAggregate(ctx, d.account, qm.Name, qm.Aggregation, filters, dimensions, orderBy, qm.Legend, qm.Limit, query.DataQuery.TimeRange.To)
 	default:
 		err := fmt.Errorf("unsupported metric name: %s", qm.Name)
 		d.logger.Error("Failed to unmarshal query model", "error", err.Error())
@@ -188,9 +219,10 @@ func (d *Datasource) handleLogsvolume(ctx context.Context, query concurrent.Quer
 		return backend.ErrorResponseWithErrorSource(err)
 	}
 
-	d.logger.Info("handleLogsvolume query", "name", qm.Name, "zone", qm.Zone)
+	d.logger.Info("handleLogsvolume query", "name", qm.Name, "zone", qm.Zone, "account", d.account)
 	span.SetAttributes(attribute.Key("name").String(qm.Name))
 	span.SetAttributes(attribute.Key("zone").String(qm.Zone))
+	span.SetAttributes(attribute.Key("account").String(d.account))
 
 	switch qm.Name {
 	case "httpRequests":
@@ -205,6 +237,11 @@ func (d *Datasource) handleLogsvolume(ctx context.Context, query concurrent.Quer
 		filtersError := cloudflare.FiltersToGraphQL(query.DataQuery.TimeRange.From.Format(time.RFC3339), query.DataQuery.TimeRange.To.Format(time.RFC3339), qm.Filter, qm.Filters, "wafAttackScoreClass: likely_attack")
 		filtersCritical := cloudflare.FiltersToGraphQL(query.DataQuery.TimeRange.From.Format(time.RFC3339), query.DataQuery.TimeRange.To.Format(time.RFC3339), qm.Filter, qm.Filters, "wafAttackScoreClass: attack")
 		return d.cloudflareClient.GetFirewallEventsVolumes(ctx, qm.Zone, filtersInfo, filtersWarning, filtersError, filtersCritical)
+	case "workersLogs":
+		if d.account == "" {
+			return d.accountNotConfigured(span)
+		}
+		return d.cloudflareClient.GetWorkersLogsVolumes(ctx, d.account, qm.Filters, query.DataQuery.TimeRange.From, query.DataQuery.TimeRange.To)
 	default:
 		err := fmt.Errorf("unsupported metric name: %s", qm.Name)
 		d.logger.Error("Failed to unmarshal query model", "error", err.Error())

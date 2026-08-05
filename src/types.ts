@@ -40,7 +40,8 @@ export const DEFAULT_QUERY: Partial<Query> = {
 export type QueryType = 'zones' | 'filtervalues' | 'metrics' | 'logsvolume';
 
 export interface Query
-  extends DataQuery,
+  extends
+  DataQuery,
   QueryModelZones,
   QueryModelFilterValues,
   QueryModelMetrics {
@@ -70,7 +71,15 @@ interface QueryModelMetrics {
   limit?: number;
 }
 
-export type QueryModelMetricsAggregation = 'sum' | 'avg' | 'count';
+export type QueryModelMetricsAggregation =
+  | 'sum'
+  | 'avg'
+  | 'count'
+  | 'P50'
+  | 'P75'
+  | 'P90'
+  | 'P99'
+  | 'P999';
 
 export type QueryModelMetricsFilterType = 'builder' | 'code';
 
@@ -86,6 +95,7 @@ export interface Options extends DataSourceJsonData {
   authMethod?: OptionsAuthMethod;
   apiEmail?: string;
   zones?: Array<[string, string]>;
+  account?: string;
 }
 
 export interface OptionsSecure {

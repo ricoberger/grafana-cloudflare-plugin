@@ -17,8 +17,10 @@ import React, { ChangeEvent } from 'react';
 
 import { Options, OptionsAuthMethod, OptionsSecure } from '../types';
 
-interface Props
-  extends DataSourcePluginOptionsEditorProps<Options, OptionsSecure> { }
+interface Props extends DataSourcePluginOptionsEditorProps<
+  Options,
+  OptionsSecure
+> { }
 
 export function ConfigEditor(props: Props) {
   const styles = useStyles2((theme: GrafanaTheme2) => ({
@@ -218,6 +220,24 @@ export function ConfigEditor(props: Props) {
             />
           </InlineFieldRow>
         ))}
+      </FieldSet>
+
+      <FieldSet className={styles.marginTop} label="Account">
+        <InlineField label="ID" labelWidth={10}>
+          <Input
+            width={40}
+            value={jsonData.account}
+            onChange={(event: ChangeEvent<HTMLInputElement>) => {
+              onOptionsChange({
+                ...options,
+                jsonData: {
+                  ...jsonData,
+                  account: event.target.value,
+                },
+              });
+            }}
+          />
+        </InlineField>
       </FieldSet>
     </>
   );
