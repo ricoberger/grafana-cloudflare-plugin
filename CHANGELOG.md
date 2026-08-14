@@ -1,5 +1,13 @@
 # Changelog
 
+## [v0.4.0](https://github.com/ricoberger/grafana-cloudflare-plugin/tree/v0.4.0) (2026-08-14)
+
+[Full Changelog](https://github.com/ricoberger/grafana-cloudflare-plugin/compare/v0.3.1...v0.4.0)
+
+- chore: update dependencies [\#72](https://github.com/ricoberger/grafana-cloudflare-plugin/pull/72) ([ricoberger](https://github.com/ricoberger))
+- feat: add support for Cloudflare Workers metrics and logs [\#71](https://github.com/ricoberger/grafana-cloudflare-plugin/pull/71) ([ricoberger](https://github.com/ricoberger))
+- chore: bump @grafana/create-plugin configuration to 7.9.1 [\#67](https://github.com/ricoberger/grafana-cloudflare-plugin/pull/67) ([ricoberger](https://github.com/ricoberger))
+
 ## [v0.3.1](https://github.com/ricoberger/grafana-cloudflare-plugin/tree/v0.3.1) (2026-06-21)
 
 [Full Changelog](https://github.com/ricoberger/grafana-cloudflare-plugin/compare/v0.3.0...v0.3.1)
