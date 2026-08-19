@@ -1,5 +1,12 @@
 # Changelog
 
+## [v0.5.0](https://github.com/ricoberger/grafana-cloudflare-plugin/tree/v0.5.0) (2026-08-19)
+
+[Full Changelog](https://github.com/ricoberger/grafana-cloudflare-plugin/compare/v0.4.0...v0.5.0)
+
+- feat\(logs\): filter by label from log details [\#74](https://github.com/ricoberger/grafana-cloudflare-plugin/pull/74) ([ricoberger](https://github.com/ricoberger))
+- fix\(workerslogs\): include otel and containers datasets [\#73](https://github.com/ricoberger/grafana-cloudflare-plugin/pull/73) ([ricoberger](https://github.com/ricoberger))
+
 ## [v0.4.0](https://github.com/ricoberger/grafana-cloudflare-plugin/tree/v0.4.0) (2026-08-14)
 
 [Full Changelog](https://github.com/ricoberger/grafana-cloudflare-plugin/compare/v0.3.1...v0.4.0)
