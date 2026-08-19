@@ -172,11 +172,19 @@ export function QueryEditor({
                       width={25}
                       placeholder="Field"
                       value={filter.field}
-                      // Custom values are allowed for the workersLogs metric,
-                      // because the list of fields is not exhaustive and any
-                      // key of an event can be used in a filter (e.g.
-                      // "$workers.event.request.cf.country").
-                      createCustomValue={query.name === 'workersLogs'}
+                      // Custom values are allowed for the workersLogs,
+                      // httpRequests and firewallEvents metrics, because the
+                      // list of fields is not exhaustive and any key of a log
+                      // line can be used in a filter (e.g.
+                      // "$workers.event.request.cf.country"). This also enables
+                      // filtering by a label directly from the "Log details"
+                      // section of a log line (see modifyQuery in the data
+                      // source).
+                      createCustomValue={
+                        query.name === 'workersLogs' ||
+                        query.name === 'httpRequests' ||
+                        query.name === 'firewallEvents'
+                      }
                       options={getFiltersOptions(query.name!).map((field) => ({
                         value: field,
                       }))}

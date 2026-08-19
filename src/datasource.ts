@@ -7,6 +7,7 @@ import {
   DataSourceWithSupplementaryQueriesSupport,
   LegacyMetricFindQueryOptions,
   MetricFindValue,
+  QueryFixAction,
   ScopedVars,
   SupplementaryQueryOptions,
   SupplementaryQueryType,
@@ -49,6 +50,57 @@ export class DataSource
 
   query(request: DataQueryRequest<Query>): Observable<DataQueryResponse> {
     return super.query(request);
+  }
+
+  // modifyQuery adds or removes a filter for the selected label / value when a
+  // user clicks the filter buttons in the "Log details" section of a log line.
+  // This is supported for the "workersLogs", "httpRequests" and
+  // "firewallEvents" queries, which return logs and use the builder filters to
+  // filter the log lines.
+  modifyQuery(query: Query, action: QueryFixAction): Query {
+    if (
+      query.name !== 'workersLogs' &&
+      query.name !== 'httpRequests' &&
+      query.name !== 'firewallEvents'
+    ) {
+      return query;
+    }
+
+    const key = action.options?.key;
+    const value = action.options?.value;
+    if (!key || value === undefined) {
+      return query;
+    }
+
+    let operator: string;
+    switch (action.type) {
+      case 'ADD_FILTER':
+        operator = '=';
+        break;
+      case 'ADD_FILTER_OUT':
+        operator = '!=';
+        break;
+      default:
+        return query;
+    }
+
+    // Drop the placeholder filter (field "-"), which is used to display an
+    // empty filter row in the UI without affecting the query, and remove any
+    // existing filter for the same field, operator and value to avoid
+    // duplicates.
+    const filters = (query.filters ?? []).filter(
+      (filter) =>
+        filter.field !== '-' &&
+        !(
+          filter.field === key &&
+          filter.operator === operator &&
+          filter.value === value
+        ),
+    );
+
+    filters.push({ field: key, operator, value });
+
+    return { ...query, filterType: 'builder', filters };
   }
 
   async metricFindQuery(
