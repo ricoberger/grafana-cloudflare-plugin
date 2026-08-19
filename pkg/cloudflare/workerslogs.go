@@ -17,9 +17,13 @@ import (
 	"github.com/grafana/grafana-plugin-sdk-go/data"
 )
 
-// workersLogsDataset is the name of the Workers Observability dataset which
-// contains the logs of Cloudflare Workers.
-const workersLogsDataset = "cloudflare-workers"
+// workersLogsDatasets are the names of the Workers Observability datasets
+// which contain the logs of Cloudflare Workers. Besides the standard
+// "cloudflare-workers" dataset, the "containers" and "otel" datasets are
+// included so that logs from Workers for Platform and container workloads
+// are returned as well, matching the datasets used by the Cloudflare
+// observability dashboard.
+var workersLogsDatasets = []string{"containers", "otel", "cloudflare-workers"}
 
 // workersLogsQueryID is the id used for all queries against the Workers
 // Observability API. Since all queries are executed as dry run, the queries
@@ -181,7 +185,7 @@ func (c *client) GetWorkersLogs(ctx context.Context, accountId string, filters [
 		View:  cloudflare.F(workers.ObservabilityTelemetryQueryParamsViewEvents),
 		Limit: cloudflare.F(float64(limit)),
 		Parameters: cloudflare.F(workers.ObservabilityTelemetryQueryParamsParameters{
-			Datasets:          cloudflare.F([]string{workersLogsDataset}),
+			Datasets:          cloudflare.F(workersLogsDatasets),
 			FilterCombination: cloudflare.F(workers.ObservabilityTelemetryQueryParamsParametersFilterCombinationAnd),
 			Filters:           cloudflare.F(workersLogsFiltersToTelemetry(filters)),
 			Limit:             cloudflare.F(limit),
@@ -256,7 +260,7 @@ func (c *client) GetWorkersLogsVolumes(ctx context.Context, accountId string, fi
 			Calculations: cloudflare.F([]workers.ObservabilityTelemetryQueryParamsParametersCalculation{{
 				Operator: cloudflare.F(workers.ObservabilityTelemetryQueryParamsParametersCalculationsOperatorCount),
 			}}),
-			Datasets:          cloudflare.F([]string{workersLogsDataset}),
+			Datasets:          cloudflare.F(workersLogsDatasets),
 			FilterCombination: cloudflare.F(workers.ObservabilityTelemetryQueryParamsParametersFilterCombinationAnd),
 			Filters:           cloudflare.F(workersLogsFiltersToTelemetry(filters)),
 			GroupBys: cloudflare.F([]workers.ObservabilityTelemetryQueryParamsParametersGroupBy{{
@@ -329,7 +333,7 @@ func (c *client) GetWorkersLogsVolumes(ctx context.Context, accountId string, fi
 func (c *client) GetWorkersLogsValues(ctx context.Context, accountId, field string, timeFrom, timeTo time.Time, limit int64) backend.DataResponse {
 	iter := c.client.Workers.Observability.Telemetry.ValuesAutoPaging(ctx, workers.ObservabilityTelemetryValuesParams{
 		AccountID: cloudflare.F(accountId),
-		Datasets:  cloudflare.F([]string{workersLogsDataset}),
+		Datasets:  cloudflare.F(workersLogsDatasets),
 		Key:       cloudflare.F(field),
 		Type:      cloudflare.F(workers.ObservabilityTelemetryValuesParamsTypeString),
 		Timeframe: cloudflare.F(workers.ObservabilityTelemetryValuesParamsTimeframe{
