@@ -330,27 +330,72 @@ func (c *client) GetWorkersLogsVolumes(ctx context.Context, accountId string, fi
 	return response
 }
 
+// GetWorkersLogsValues returns the distinct values of the given field. Since
+// the Workers Observability values endpoint only supports a limited set of
+// fields, the values are instead determined via a calculations query which is
+// grouped by the selected field (similar to GetWorkersLogsVolumes). This way
+// any key of an event can be used as field (e.g.
+// "$workers.event.request.cf.country").
 func (c *client) GetWorkersLogsValues(ctx context.Context, accountId, field string, timeFrom, timeTo time.Time, limit int64) backend.DataResponse {
-	iter := c.client.Workers.Observability.Telemetry.ValuesAutoPaging(ctx, workers.ObservabilityTelemetryValuesParams{
+	res, err := c.client.Workers.Observability.Telemetry.Query(ctx, workers.ObservabilityTelemetryQueryParams{
 		AccountID: cloudflare.F(accountId),
-		Datasets:  cloudflare.F(workersLogsDatasets),
-		Key:       cloudflare.F(field),
-		Type:      cloudflare.F(workers.ObservabilityTelemetryValuesParamsTypeString),
-		Timeframe: cloudflare.F(workers.ObservabilityTelemetryValuesParamsTimeframe{
+		QueryID:   cloudflare.F(workersLogsQueryID),
+		Dry:       cloudflare.F(true),
+		Timeframe: cloudflare.F(workers.ObservabilityTelemetryQueryParamsTimeframe{
 			From: cloudflare.F(float64(timeFrom.UnixMilli())),
 			To:   cloudflare.F(float64(timeTo.UnixMilli())),
 		}),
-		Limit: cloudflare.F(float64(limit)),
+		// The chart option must be set to true, since the time series data
+		// for the calculations view is only included in the response if it
+		// is set.
+		Chart: cloudflare.F(true),
+		View:  cloudflare.F(workers.ObservabilityTelemetryQueryParamsViewCalculations),
+		Parameters: cloudflare.F(workers.ObservabilityTelemetryQueryParamsParameters{
+			Calculations: cloudflare.F([]workers.ObservabilityTelemetryQueryParamsParametersCalculation{{
+				Operator: cloudflare.F(workers.ObservabilityTelemetryQueryParamsParametersCalculationsOperatorCount),
+			}}),
+			Datasets:          cloudflare.F(workersLogsDatasets),
+			FilterCombination: cloudflare.F(workers.ObservabilityTelemetryQueryParamsParametersFilterCombinationAnd),
+			GroupBys: cloudflare.F([]workers.ObservabilityTelemetryQueryParamsParametersGroupBy{{
+				Type:  cloudflare.F(workers.ObservabilityTelemetryQueryParamsParametersGroupBysTypeString),
+				Value: cloudflare.F(field),
+			}}),
+			Limit: cloudflare.F(limit),
+		}),
 	})
+	if err != nil {
+		return backend.ErrorResponseWithErrorSource(err)
+	}
 
 	var response backend.DataResponse
 
-	for iter.Next() {
-		v := iter.Current()
-		response.Frames = append(response.Frames, data.NewFrame(workersLogsUnionToString(v.Value)))
-	}
-	if err := iter.Err(); err != nil {
-		return backend.ErrorResponseWithErrorSource(err)
+	// Collect the distinct values of the field across all series. The value of
+	// each group is used as the name of a frame, so that it is returned as a
+	// filter value in the frontend.
+	seen := make(map[string]struct{})
+
+	for _, calculation := range res.Calculations {
+		for _, series := range calculation.Series {
+			for _, d := range series.Data {
+				for _, g := range d.Groups {
+					if g.Key != field {
+						continue
+					}
+
+					value := workersLogsUnionToString(g.Value)
+					if _, ok := seen[value]; ok {
+						continue
+					}
+					seen[value] = struct{}{}
+
+					response.Frames = append(response.Frames, data.NewFrame(value))
+
+					if limit > 0 && int64(len(seen)) >= limit {
+						return response
+					}
+				}
+			}
+		}
 	}
 
 	return response
