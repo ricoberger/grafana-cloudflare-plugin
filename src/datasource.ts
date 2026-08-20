@@ -121,26 +121,28 @@ export class DataSource
 
     const response = await lastValueFrom(q as Observable<DataQueryResponse>);
 
-    if (
-      response &&
-      (!response.data.length || !response.data[0].fields.length)
-    ) {
+    if (!response || !response.data.length) {
       return [];
     }
 
+    // Filter value queries return one frame per value, where the value is
+    // stored in the frame name (the frames do not contain any fields), so the
+    // values are mapped from the frame names.
     if (query.queryType === 'filtervalues') {
-      return response
-        ? response.data.map((data) => {
-          return {
-            text: data.name,
-            value: data.name,
-          };
-        })
-        : [];
+      return response.data.map((data) => {
+        return {
+          text: data.name,
+          value: data.name,
+        };
+      });
     }
 
-    return response
-      ? (response.data[0] as DataFrame).fields[0].values.map((_, index) => {
+    if (!response.data[0].fields.length) {
+      return [];
+    }
+
+    return (response.data[0] as DataFrame).fields[0].values.map(
+      (_, index) => {
         const name = (response.data[0] as DataFrame).fields[1].values[
           index
         ].toString();
@@ -149,8 +151,8 @@ export class DataSource
           text: name,
           value: _.toString(),
         };
-      })
-      : [];
+      },
+    );
   }
 
   filterQuery(query: Query): boolean {
