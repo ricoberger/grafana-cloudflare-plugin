@@ -1,5 +1,14 @@
 # Changelog
 
+## [v0.6.0](https://github.com/ricoberger/grafana-cloudflare-plugin/tree/v0.6.0) (2026-11-08)
+
+[Full Changelog](https://github.com/ricoberger/grafana-cloudflare-plugin/compare/v0.5.0...v0.6.0)
+
+- chore: dependency updates [\#89](https://github.com/ricoberger/grafana-cloudflare-plugin/pull/89) ([ricoberger](https://github.com/ricoberger))
+- chore: bump @grafana/create-plugin configuration to 7.17.0 [\#86](https://github.com/ricoberger/grafana-cloudflare-plugin/pull/86) ([ricoberger](https://github.com/ricoberger))
+- chore: bump @grafana/create-plugin configuration to 7.11.0 [\#81](https://github.com/ricoberger/grafana-cloudflare-plugin/pull/81) ([ricoberger](https://github.com/ricoberger))
+- fix\(workerslogs\): fetch filter values for workersLogs metric [\#75](https://github.com/ricoberger/grafana-cloudflare-plugin/pull/75) ([ricoberger](https://github.com/ricoberger))
+
 ## [v0.5.0](https://github.com/ricoberger/grafana-cloudflare-plugin/tree/v0.5.0) (2026-08-19)
 
 [Full Changelog](https://github.com/ricoberger/grafana-cloudflare-plugin/compare/v0.4.0...v0.5.0)
